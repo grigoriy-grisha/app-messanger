@@ -1,0 +1,23 @@
+User
+--fullname: string
+--email: string
+--password: string
+--last_seen: Date ?
+
+
+Dialog
+--users: ObjectId(userObject)[]
+--lastMessage: {
+    --id: ObjectId(dialogObject)
+    --text: string
+    --read: bool
+}
+--countUnreadMessage: number
+--protected
+
+
+Messages
+--text: string
+--dialog: ObjectId(dialogObject)
+--user: ObjectId(userObject)
+--read: bool
