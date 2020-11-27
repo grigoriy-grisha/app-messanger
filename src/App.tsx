@@ -1,13 +1,9 @@
 import React from "react";
-import "./App.css";
-import { RootStateProvider } from "./Store/RootStateContext";
+
+import Routes from "./components/Route";
 
 function App() {
-  return (
-    <RootStateProvider>
-      <div className="App"></div>
-    </RootStateProvider>
-  );
+  return <Routes />;
 }
 
 export default App;
