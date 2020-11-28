@@ -5,7 +5,8 @@ export function useValidatePassword(password: string, repeatPassword: string) {
   useEffect(() => {
     if (password !== repeatPassword) setEqualPassword(true);
     if (password && password === repeatPassword) setEqualPassword(false);
-  }, [repeatPassword]);
+    if (!password && !repeatPassword) setEqualPassword(false);
+  }, [repeatPassword, password]);
 
   return equalPassword;
 }

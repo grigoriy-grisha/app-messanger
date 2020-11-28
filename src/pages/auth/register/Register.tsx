@@ -13,6 +13,7 @@ import authService from "../../../store/AuthService";
 import { useValidatePassword } from "../../../hooks/useValidatePassword";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
 
+
 interface IProps {}
 
 export const Register: React.FC<IProps> = () => {

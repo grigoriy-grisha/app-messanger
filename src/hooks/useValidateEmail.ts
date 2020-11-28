@@ -8,7 +8,7 @@ export function useValidateEmail(emailValue: string) {
 
     if (match) {
       setValidateEmail(false);
-    } else if (!validateEmail && !match) {
+    } else if (emailValue && !match) {
       setValidateEmail(true);
     }
   }, [emailValue]);
