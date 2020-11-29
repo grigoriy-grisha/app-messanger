@@ -50,6 +50,7 @@ export const Login: React.FC<IProps> = () => {
             placeholder="Введите почту"
             onChange={(e) => setEmailValue(e.target.value)}
             value={emailValue}
+            type="email"
             validate={validateEmail}
           />
           {validateEmail ? (

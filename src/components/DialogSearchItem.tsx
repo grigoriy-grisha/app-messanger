@@ -2,7 +2,7 @@ import styled from "styled-components";
 import message from "../static/img/message.svg"
 
 const DialogSearchContainer = styled.div`
-    width: 310px;
+    width: 100%;
     padding: 10px 35px;
     transition: 0.1s;
     display: flex;

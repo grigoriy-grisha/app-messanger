@@ -1,47 +1,32 @@
 import styled from "styled-components";
-import message from "../static/img/message.svg"
-import chat from "../static/img/chat.svg"
-
+import settings from "../static/img/settings.svg"
 import {DialogSearchCountUsers, DialogSearchName} from "./DialogSearchItem";
 
-const ListsDialogsAndContactContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 381px;
-  border-right:1px solid #dddddd;
-`
 
-const List = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  width: 50%;
-  transition: 0.1s; 
-  cursor:pointer;
-  padding: 6px;
-  &:hover {
-    background: #F3F7FF;
-  }
-`
-const TopSideStyle = styled.div`
+const TopSideWrapper = styled.div`
     width: 100%;
-    height: 7vh;
+    height: 7%;
     display: flex;
     border-bottom:1px solid #dddddd;
 `
 export const ImgBlock = styled.img`
-    width: 25px;
-    height: 25px;
     display: block;
-    padding: 15px;
+    width: 32px;
+    height: 32px;
+`
+export const ImgBlockPointer = styled(ImgBlock)`
+    cursor: pointer;
+    transition: 0.1s;
+    &:hover {
+        background: #F3F7FF;
+    }
 `
 
-
 const DialogInfoContainer = styled.div`
-    width: 70%;
+    padding: 18px;
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 `
 
@@ -55,19 +40,9 @@ const DialogInfo = styled.div`
 
 export const TopSide = () => {
   return (
-    <TopSideStyle>
-      <ListsDialogsAndContactContainer>
-        <List>
-          <ImgBlock src={message} alt="message"/>
-          Список Диалогов
-        </List>
-        <List>
-          <ImgBlock src={chat} alt="chat"/>
-          Мои диалоги
-        </List>
-      </ListsDialogsAndContactContainer>
-
+    <TopSideWrapper>
       <DialogInfoContainer>
+        <div/>
         <DialogInfo>
           <DialogSearchName>
             asdsadasdasdsa
@@ -76,8 +51,9 @@ export const TopSide = () => {
             11 участников
           </DialogSearchCountUsers>
         </DialogInfo>
+        <ImgBlockPointer src={settings} alt="settings"/>
       </DialogInfoContainer>
-    </TopSideStyle>
+    </TopSideWrapper>
 
   )
 }

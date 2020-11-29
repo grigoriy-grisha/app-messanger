@@ -30,7 +30,7 @@ export const Register: React.FC<IProps> = () => {
   );
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = async (e: FormEvent) => {
+  const onSubmitRequest = async (e: FormEvent<HTMLButtonElement | HTMLFormElement>) => {
     e.preventDefault();
     if (!emailValue && !repeatPasswordValue) return;
     const body = {
@@ -60,6 +60,7 @@ export const Register: React.FC<IProps> = () => {
             onChange={(e) => setEmailValue(e.target.value)}
             value={emailValue}
             validate={validateEmail}
+            type="email"
           />
           {validateEmail ? (
             <ErrorText>Введите правильный email!</ErrorText>

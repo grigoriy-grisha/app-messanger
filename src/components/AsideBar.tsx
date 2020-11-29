@@ -4,7 +4,7 @@ import {ImgBlock} from "./TopSide";
 
 const AsideBarContainer = styled.div`
   position: absolute;
-  left: -70px;
+  left: -50px;
   top: 0;
   display: flex;
   flex-direction: column;
@@ -30,7 +30,8 @@ const AsideBarBlock = styled.div`
 `
 
 const AsideItem = styled(ImgBlock)`
-    padding: 23px;
+    box-sizing: content-box;
+    padding: 19px;
     border-bottom:1px solid #dddddd;
     &:hover {
       background: #F3F7FF;
