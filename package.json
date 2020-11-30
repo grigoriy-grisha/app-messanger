@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/react-router-dom": "^5.1.6",
+    "@types/socket.io-client": "^1.4.34",
     "mobx": "^6.0.4",
     "mobx-react": "^7.0.5",
     "mobx-react-lite": "^3.1.6",
@@ -11,6 +12,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "socket.io-client": "^3.0.3",
     "styled-components": "^5.2.1",
     "timeago.js": "^4.0.2"
   },
@@ -20,7 +22,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",

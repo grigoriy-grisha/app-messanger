@@ -1,23 +1,23 @@
 import { URL } from "../constant";
 
 class Http {
-  private MyHeaders: Headers;
+  private readonly MyHeaders: Headers;
 
   constructor() {
     this.MyHeaders = new Headers();
     this.MyHeaders.append("Content-Type", "application/json");
     this.MyHeaders.append(
       "Authorization",
-      "Bearer" + window.localStorage.token
+      "Bearer " + window.localStorage.token
     );
   }
 
   get(url: string) {
-    return fetch(url, { headers: this.MyHeaders });
+    return fetch(URL + url, { headers: this.MyHeaders });
   }
 
   post(url: string, body = {}) {
-    return fetch(url, {
+    return fetch(URL + url, {
       method: "POST",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -25,7 +25,7 @@ class Http {
   }
 
   delete(url: string, body = {}) {
-    return fetch(url, {
+    return fetch(URL + url, {
       method: "DELETE",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -33,7 +33,7 @@ class Http {
   }
 
   put(url: string) {
-    return fetch(url, {
+    return fetch(URL + url, {
       method: "PUT",
       headers: this.MyHeaders,
       redirect: "follow",

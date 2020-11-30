@@ -1,6 +1,7 @@
-import React, {FormEvent, useState} from "react";
+import React, { FormEvent, useState } from "react";
 import {
-  AuthContainer, AuthInput,
+  AuthContainer,
+  AuthInput,
   AuthInputValidate,
   AuthLink,
   AuthSubmitButton,
@@ -8,21 +9,19 @@ import {
   ErrorText,
 } from "../index";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
-import authService from "../../../store/AuthService";
-
+import { authService } from "../../../store/AuthService";
 
 interface IProps {}
 
 export const Login: React.FC<IProps> = () => {
-
+  const history = useHistory();
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
 
   const validateEmail = useValidateEmail(emailValue);
-
 
   const onSubmitRequest = async (e: FormEvent) => {
     e.preventDefault();
@@ -38,7 +37,9 @@ export const Login: React.FC<IProps> = () => {
 
     await authService
       .loginAction(body)
-      .then((res: any) => console.log(res))
+      .then((res: any) => {
+        if (res) history.push("/");
+      })
       .catch((err: any) => console.log(err));
   };
 

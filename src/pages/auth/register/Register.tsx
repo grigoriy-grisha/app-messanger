@@ -9,10 +9,9 @@ import {
   ErrorText,
 } from "../index";
 import { Link, useHistory } from "react-router-dom";
-import authService from "../../../store/AuthService";
+import { authService } from "../../../store/AuthService";
 import { useValidatePassword } from "../../../hooks/useValidatePassword";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
-
 
 interface IProps {}
 
@@ -30,9 +29,11 @@ export const Register: React.FC<IProps> = () => {
   );
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = async (e: FormEvent<HTMLButtonElement | HTMLFormElement>) => {
+  const onSubmitRequest = async (
+    e: FormEvent<HTMLButtonElement | HTMLFormElement>
+  ) => {
     e.preventDefault();
-    if (!emailValue && !repeatPasswordValue) return;
+    if (!emailValue && !repeatPasswordValue && !name) return;
     const body = {
       email: emailValue,
       password: repeatPasswordValue,
