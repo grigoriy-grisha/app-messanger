@@ -64,7 +64,6 @@ interface IProps {
 
 const MessageItem: React.FC<IProps> = ({ id, text }) => {
   const isMe = authService.id === id;
-  console.log(authService.id === id);
   return (
     <MessageContainer isMe={isMe}>
       <MessageFlexEnd isMe={isMe}>

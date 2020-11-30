@@ -1,10 +1,10 @@
-import { Redirect, Switch, Route } from "react-router-dom";
-import { Main } from "../pages/main/Main";
-import { Auth } from "../pages/auth";
+import {Redirect, Switch, Route} from "react-router-dom";
+import {Main} from "../pages/main/Main";
+import {Auth} from "../pages/auth";
 import React from "react";
-import { observer } from "mobx-react-lite";
-import { authService } from "../store/AuthService";
-import { RedirectPage } from "../pages/redirect/RedirectPage";
+import {observer} from "mobx-react-lite";
+import {authService} from "../store/AuthService";
+import {RedirectPage} from "../pages/redirect/RedirectPage";
 
 const Routes = observer(() => {
   return (
@@ -12,16 +12,16 @@ const Routes = observer(() => {
       {authService.isAuth ? (
         <Switch>
           <Route path="/redirect" exact={true}>
-            <RedirectPage />
+            <RedirectPage/>
           </Route>
-          <Route path="/:id">
-            <Main />
+          <Route path={["/:id", '/']}>
+            <Main/>
           </Route>
         </Switch>
       ) : (
         <>
-          <Auth />
-          <Redirect from="/" to="/auth/register" />
+          <Auth/>
+          <Redirect from="/" to="/auth/register"/>
         </>
       )}
     </div>
@@ -29,3 +29,4 @@ const Routes = observer(() => {
 });
 
 export default Routes;
+

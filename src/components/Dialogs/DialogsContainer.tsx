@@ -5,6 +5,7 @@ import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
 import { messageService } from "../../store/MessagesService";
+import {alertService} from "../../store/AlertService";
 
 const DialogsWrap = styled.div`
   overflow-y: scroll;
@@ -27,9 +28,7 @@ export const DialogsContainer: React.FC<IProps> = () => {
         history.push(`${res.index}`);
         dialogsService.currentId = id;
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => alertService.showAlert(err.message));
   };
 
   return (

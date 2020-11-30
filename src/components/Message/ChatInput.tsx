@@ -3,6 +3,7 @@ import React, { FormEvent, useState } from "react";
 import { ImgBlockPointer } from "../TopSide/TopSide";
 import send from "../../static/img/send.svg";
 import { messageService } from "../../store/MessagesService";
+import {alertService} from "../../store/AlertService";
 
 const ChatInputContainer = styled.div`
   width: 100%;
@@ -39,7 +40,7 @@ export const ChatInput = () => {
         console.log(res);
         setValue("");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alertService.showAlert(err.message));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, {FormEvent, useState} from "react";
 import {
   AuthContainer,
   AuthInput,
@@ -8,12 +8,14 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-import { Link, useHistory } from "react-router-dom";
-import { authService } from "../../../store/AuthService";
-import { useValidatePassword } from "../../../hooks/useValidatePassword";
-import { useValidateEmail } from "../../../hooks/useValidateEmail";
+import {Link, useHistory} from "react-router-dom";
+import {authService} from "../../../store/AuthService";
+import {useValidatePassword} from "../../../hooks/useValidatePassword";
+import {useValidateEmail} from "../../../hooks/useValidateEmail";
+import {alertService} from "../../../store/AlertService";
 
-interface IProps {}
+interface IProps {
+}
 
 export const Register: React.FC<IProps> = () => {
   const history = useHistory();
@@ -50,7 +52,7 @@ export const Register: React.FC<IProps> = () => {
       .then((res) => {
         if (res) history.push("/auth/login");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alertService.showAlert(err.message));
   };
   return (
     <AuthWrap>
