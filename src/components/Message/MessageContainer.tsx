@@ -1,44 +1,54 @@
 import { messageService } from "../../store/MessagesService";
 import MessageItem from "./MessageItem";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import socket from "../../utils/socket";
+import { CenterElement } from "../../App";
+import { dialogsService } from "../../store/DialogsService";
 
 const MessageWrap = styled.div`
-  max-height: 85%;
+  position: relative;
   height: 85%;
   padding: 25px;
   overflow-y: scroll;
 `;
 
+const PreventiveMessage = styled.h2`
+  font-size: 21px;
+  color: #666666;
+`;
+
 interface IProps {}
 
 export const MessageContainer: React.FC<IProps> = observer(() => {
-  useEffect(() => {
-    socket.on("SERVER:NEW_MESSAGE", (data: any) => {
-      console.log(data);
-      if (data) {
-        console.log(data);
-      }
-    });
+  const messageRef = useRef<HTMLDivElement>(null);
 
-    return () => {
-      socket.off("SERVER:NEW_MESSAGE", (data: any) => {});
-    };
-  });
+  useEffect(() => {
+    messageRef.current!.scrollTop = 9999;
+  }, [messageService.messages]);
 
   return (
-    <MessageWrap>
-      {messageService.messages.map((item: any) => {
-        return (
-          <MessageItem
-            key={item._id + Math.random().toFixed(6)}
-            id={item.author}
-            text={item.text}
-          />
-        );
-      })}
+    <MessageWrap ref={messageRef}>
+      {messageService.messages.length ? (
+        messageService.messages.map((item: any) => {
+          return (
+            <MessageItem
+              key={item._id}
+              id={item.author}
+              text={item.text}
+              date={item.createdAt}
+            />
+          );
+        })
+      ) : (
+        <CenterElement>
+          {dialogsService.currentId ? (
+            <PreventiveMessage>Пока что нет сообщений!</PreventiveMessage>
+          ) : (
+            <PreventiveMessage>Откройте Диалог</PreventiveMessage>
+          )}
+        </CenterElement>
+      )}
     </MessageWrap>
   );
 });

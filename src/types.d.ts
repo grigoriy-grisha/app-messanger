@@ -5,6 +5,7 @@ interface DialogsInterface {
   link: string;
   lastMessage: string;
   protected: boolean;
+  date: Date;
   users: UsersInterface[];
 }
 

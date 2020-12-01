@@ -1,6 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import { http } from "../utils/Http";
 import { dialogsService } from "./DialogsService";
+import { catchAlerts } from "../utils/catchAlerts";
+import { getAction, postAction } from "../utils/fetchActions";
 
 class MessagesService {
   messages: Array<any> = [];
@@ -9,26 +11,21 @@ class MessagesService {
     makeAutoObservable(this);
   }
 
+  @catchAlerts
   async getMessagesById(id: string) {
-    const response = await http.get(`/message/get/${id}`);
-    const result: any = await response.json();
-    if (!response.ok) throw new Error(result.message);
-
+    const result = await getAction(`/message/get/${id}`);
+    dialogsService.currentDialog = result.dialog;
     this.messages = result.messages;
     return result;
   }
 
+  @catchAlerts
   async sendMessage(message: string) {
     const postData = {
       text: message,
       dialog: dialogsService.currentId,
     };
-
-    console.log(postData);
-    const response = await http.post("/message/add", postData);
-    const result: any = await response.json();
-    if (!response.ok) throw new Error(result.message);
-    return result;
+    return await postAction("/redirect", postData);
   }
 }
 

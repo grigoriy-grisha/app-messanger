@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { DialogSearchItem } from "./DialogSearchItem";
+import { DialogItem } from "./DialogItem";
 import styled from "styled-components";
 import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { messageService } from "../../store/MessagesService";
-import {alertService} from "../../store/AlertService";
+import message from "../../static/img/message.svg";
 
 const DialogsWrap = styled.div`
   overflow-y: scroll;
@@ -13,34 +12,31 @@ const DialogsWrap = styled.div`
   height: 93%;
 `;
 
-interface IProps {}
+interface DialogsContainerInterface {}
 
-export const DialogsContainer: React.FC<IProps> = () => {
+export const DialogsSearchContainer = ({}: DialogsContainerInterface) => {
   const history = useHistory();
+
   useEffect(() => {
-    dialogsService.getDialogs().catch((err) => console.log(err));
+    dialogsService.getAllDialogs().then();
   }, []);
 
   const clickOnDialogItem = (id: string) => {
-    messageService
-      .getMessagesById(id)
-      .then((res) => {
-        history.push(`${res.index}`);
-        dialogsService.currentId = id;
-      })
-      .catch((err) => alertService.showAlert(err.message));
+    history.push(`${id}`);
+    dialogsService.changeCurrentId(id);
   };
 
   return (
     <DialogsWrap>
       {dialogsService.dialogs.map((dialog: DialogsInterface) => {
         return (
-          <DialogSearchItem
+          <DialogItem
             clickOnDialogItem={clickOnDialogItem}
             key={dialog._id}
             id={dialog._id}
             name={dialog.name}
             users={dialog.users}
+            img={message}
           />
         );
       })}
@@ -48,4 +44,4 @@ export const DialogsContainer: React.FC<IProps> = () => {
   );
 };
 
-export default React.memo(observer(DialogsContainer));
+export default React.memo(observer(DialogsSearchContainer));

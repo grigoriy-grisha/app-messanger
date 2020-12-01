@@ -60,9 +60,10 @@ const MessageFlexEnd = styled.div`
 interface IProps {
   id: string;
   text: string;
+  date: Date;
 }
 
-const MessageItem: React.FC<IProps> = ({ id, text }) => {
+const MessageItem: React.FC<IProps> = ({ id, text, date }) => {
   const isMe = authService.id === id;
   return (
     <MessageContainer isMe={isMe}>
@@ -70,7 +71,7 @@ const MessageItem: React.FC<IProps> = ({ id, text }) => {
         <MessageAvatar />
         <MessageColumn>
           <MessageText isMe={isMe}>{text}</MessageText>
-          <MessageTimer>{format(new Date())}</MessageTimer>
+          <MessageTimer>{format(date)}</MessageTimer>
         </MessageColumn>
       </MessageFlexEnd>
     </MessageContainer>

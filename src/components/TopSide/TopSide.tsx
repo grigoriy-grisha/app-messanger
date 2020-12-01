@@ -3,7 +3,10 @@ import settings from "../../static/img/settings.svg";
 import {
   DialogSearchCountUsers,
   DialogSearchName,
-} from "../Dialogs/DialogSearchItem";
+} from "../Dialogs/DialogItem";
+import React from "react";
+import { observer } from "mobx-react-lite";
+import { dialogsService } from "../../store/DialogsService";
 
 const TopSideWrapper = styled.div`
   width: 100%;
@@ -39,17 +42,23 @@ const DialogInfo = styled.div`
   flex-direction: column;
 `;
 
-export const TopSide = () => {
+export const TopSide = observer(() => {
   return (
     <TopSideWrapper>
-      <DialogInfoContainer>
-        <div />
-        <DialogInfo>
-          <DialogSearchName>asdsadasdasdsa</DialogSearchName>
-          <DialogSearchCountUsers>11 участников</DialogSearchCountUsers>
-        </DialogInfo>
-        <ImgBlockPointer src={settings} alt="settings" />
-      </DialogInfoContainer>
+      {dialogsService.currentDialog && (
+        <DialogInfoContainer>
+          <div />
+          <DialogInfo>
+            <DialogSearchName>
+              {dialogsService.currentDialog?.name}
+            </DialogSearchName>
+            <DialogSearchCountUsers>
+              {dialogsService.currentDialog?.users.length} Участников
+            </DialogSearchCountUsers>
+          </DialogInfo>
+          <ImgBlockPointer src={settings} alt="settings" />
+        </DialogInfoContainer>
+      )}
     </TopSideWrapper>
   );
-};
+});

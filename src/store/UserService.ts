@@ -1,10 +1,18 @@
 import { makeAutoObservable } from "mobx";
+import { getAction } from "../utils/fetchActions";
+import { catchAlerts } from "../utils/catchAlerts";
 
 class UserService {
-  dialogs: DialogsInterface[] = [];
+  users: Array<UsersInterface> = [];
   constructor() {
     makeAutoObservable(this);
   }
 
-  getDialogs() {}
+  @catchAlerts
+  async getUsers() {
+    const result = await getAction("/user/all");
+    this.users = result;
+  }
 }
+
+export const userService = new UserService();

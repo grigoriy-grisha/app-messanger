@@ -1,39 +1,55 @@
 import { makeAutoObservable } from "mobx";
-import { http } from "../utils/Http";
+import { catchAlerts } from "../utils/catchAlerts";
+import { storageService } from "./StorageService";
+import { postAction } from "../utils/fetchActions";
 
 class AuthService {
-  isAuth: boolean = !!window.localStorage.token;
-  token: string = window.localStorage.token;
-  id: string = window.localStorage.id;
+  isAuth: boolean = false;
+  token: string | null = null;
+  id: string | null = null;
 
   constructor() {
     makeAutoObservable(this);
+    this.init().then();
   }
 
-  async registerAction(body: object) {
-    const response = await http.post("/user/signup", body);
-    const result = await response.json();
-    if (response.ok) return result;
+  async init() {
+    this.token = await storageService.get("token");
+    this.isAuth = !!this.token;
+    this.id = await storageService.get("id");
+  }
 
-    throw new Error(result.message);
+  @catchAlerts
+  async registerAction(body: object) {
+    return await postAction("/user/signup", body);
+  }
+
+  @catchAlerts
+  async loginAction(body: object) {
+    const result = await postAction("/user/signin", body);
+    await this.setUserFetchAction(result.token, result._id);
+    return result;
   }
 
   async setUserFetchAction(token: string, id: string) {
-    localStorage.setItem("token", token);
-    localStorage.setItem("id", id);
+    await storageService.set("token", token);
+    await storageService.set("id", id);
     this.token = token;
     this.id = id;
     this.isAuth = true;
   }
 
-  async loginAction(body: object) {
-    const response = await http.post("/user/signin", body);
-    const result: any = await response.json();
-    if (!response.ok) throw new Error(result.message);
+  logoutAction = async () => {
+    await this.removeUserAction();
+  };
 
-    await this.setUserFetchAction(result.token, result._id);
-    return result;
-  }
+  removeUserAction = async () => {
+    await storageService.delete("token");
+    await storageService.delete("id");
+    this.token = null;
+    this.id = null;
+    this.isAuth = false;
+  };
 }
 
 export const authService = new AuthService();

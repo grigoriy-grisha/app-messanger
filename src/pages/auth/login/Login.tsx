@@ -13,7 +13,6 @@ import { Link, useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
 import { authService } from "../../../store/AuthService";
-import {alertService} from "../../../store/AlertService";
 
 interface IProps {}
 
@@ -36,12 +35,9 @@ export const Login: React.FC<IProps> = () => {
     setEmailValue("");
     setPasswordValue("");
 
-    await authService
-      .loginAction(body)
-      .then((res: any) => {
-        if (res) history.push("/");
-      })
-      .catch((err: any) => alertService.showAlert(err.message));
+    await authService.loginAction(body).then((res: any) => {
+      if (res) history.push("/");
+    });
   };
 
   return (

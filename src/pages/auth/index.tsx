@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import Link, { Route, Switch } from "react-router-dom";
+import Link, { Redirect, Route, Switch } from "react-router-dom";
 import { Login } from "./login/Login";
 import { Register } from "./register/Register";
+import { authService } from "../../store/AuthService";
+import { observer } from "mobx-react-lite";
 
 interface IProps {}
 
@@ -48,15 +50,14 @@ export const AuthInputValidate = styled(AuthInput)`
 `;
 
 export const AuthSubmitButton = styled.button`
+  font-size: 18px;
+  margin: 0 auto;
+  margin-top: 35px;
   background: #4ca5ff;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  font-size: 18px;
-  margin: 0 auto;
-  margin-top: 35px;
-
   border-radius: 4px;
   width: 315px;
   height: 30px;
@@ -81,9 +82,10 @@ export const ErrorText = styled.span`
   transition: 1s;
 `;
 
-export const Auth: React.FC<IProps> = () => {
+export const Auth: React.FC<IProps> = observer(() => {
   return (
     <div>
+      <Redirect from="/" to="/auth/register" />
       <Route path="/auth/login">
         <Login />
       </Route>
@@ -92,4 +94,4 @@ export const Auth: React.FC<IProps> = () => {
       </Route>
     </div>
   );
-};
+});

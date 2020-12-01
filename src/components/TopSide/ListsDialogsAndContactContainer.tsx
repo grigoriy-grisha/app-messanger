@@ -1,7 +1,7 @@
 import { ImgBlock } from "./TopSide";
 import message from "../../static/img/message.svg";
 import chat from "../../static/img/chat.svg";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { dialogsService } from "../../store/DialogsService";
 
@@ -21,7 +21,7 @@ const ListType = styled.div`
   cursor: pointer;
   background: ${({ theme }) => {
     console.log(theme);
-    return theme === 1 ? "#ffffff" : "#f3f7ff";
+    return theme.value === theme.number ? "#f3f7ff" : "#ffffff";
   }};
   &:hover {
     background: #f3f7ff;
@@ -31,13 +31,28 @@ const ListType = styled.div`
 interface IProps {}
 
 export const ListsDialogsAndContactContainer: React.FC<IProps> = () => {
+  const [value, setValue] = useState(1);
+
   return (
     <ListsDialogsAndContactWrap>
-      <ListType onClick={() => dialogsService.getAllDialogs()}>
+      <ListType
+        theme={{ value, number: 0 }}
+        onClick={() => {
+          setValue(0);
+          dialogsService.changeDialogsMode(true);
+        }}
+      >
         <ImgBlock src={message} alt="message" />
         Список Диалогов
       </ListType>
-      <ListType onClick={() => dialogsService.getDialogs()}>
+      <ListType
+        theme={{ value, number: 1 }}
+        onClick={() => {
+          setValue(1);
+          dialogsService.getDialogs().then();
+          dialogsService.changeDialogsMode(false);
+        }}
+      >
         <ImgBlock src={chat} alt="chat" />
         Мои диалоги
       </ListType>

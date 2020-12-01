@@ -1,4 +1,5 @@
 import { URL } from "../constant";
+import { storageService } from "../store/StorageService";
 
 class Http {
   private readonly MyHeaders: Headers;
@@ -6,38 +7,46 @@ class Http {
   constructor() {
     this.MyHeaders = new Headers();
     this.MyHeaders.append("Content-Type", "application/json");
-    this.MyHeaders.append(
-      "Authorization",
-      "Bearer " + window.localStorage.token
-    );
   }
 
-  get(url: string) {
-    return fetch(URL + url, { headers: this.MyHeaders });
+  async get(url: string) {
+    await this.getToken();
+    return await fetch(URL + url, { headers: this.MyHeaders });
   }
 
-  post(url: string, body = {}) {
-    return fetch(URL + url, {
+  async post(url: string, body = {}) {
+    await this.getToken();
+    return await fetch(URL + url, {
       method: "POST",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
     });
   }
 
-  delete(url: string, body = {}) {
-    return fetch(URL + url, {
+  async delete(url: string, body = {}) {
+    await this.getToken();
+    return await fetch(URL + url, {
       method: "DELETE",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
     });
   }
 
-  put(url: string) {
-    return fetch(URL + url, {
+  async put(url: string) {
+    await this.getToken();
+    return await fetch(URL + url, {
       method: "PUT",
       headers: this.MyHeaders,
       redirect: "follow",
     });
+  }
+
+  async getToken() {
+    this.MyHeaders.delete("Authorization");
+    this.MyHeaders.append(
+      "Authorization",
+      "Bearer " + (await storageService.get("token"))
+    );
   }
 }
 

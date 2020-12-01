@@ -3,14 +3,17 @@ import React, { FormEvent, useState } from "react";
 import { ImgBlockPointer } from "../TopSide/TopSide";
 import send from "../../static/img/send.svg";
 import { messageService } from "../../store/MessagesService";
-import {alertService} from "../../store/AlertService";
+import { alertService } from "../../store/AlertService";
+import socket from "../../utils/socket";
+import { dialogsService } from "../../store/DialogsService";
+import { observer } from "mobx-react-lite";
 
 const ChatInputContainer = styled.div`
   width: 100%;
-  height: 10%;
+  height: 102px;
   display: flex;
   align-items: center;
-  padding: 15px 25px;
+  padding: 30px 34px;
   border-top: 1px solid #dddddd;
   border-right: 1px solid #dddddd;
 `;
@@ -19,7 +22,7 @@ const Input = styled.input`
   height: 40px;
   border: 1px solid #e9e9e9;
   border-radius: 4px;
-  padding: 10px;
+  padding: 14px;
   font-size: 18px;
   outline: none;
   &::placeholder {
@@ -28,32 +31,33 @@ const Input = styled.input`
   margin-right: 23px;
 `;
 
-export const ChatInput = () => {
+const ChatInput = () => {
   const [value, setValue] = useState("");
 
   const sendMessage = (e: FormEvent<HTMLFormElement | HTMLImageElement>) => {
     e.preventDefault();
+
     if (!value) return;
-    messageService
-      .sendMessage(value)
-      .then((res) => {
-        console.log(res);
-        setValue("");
-      })
-      .catch((err) => alertService.showAlert(err.message));
+    messageService.sendMessage(value).then(() => setValue(""));
   };
 
   return (
     <form onSubmit={sendMessage}>
       <ChatInputContainer>
-        <Input
-          type="text"
-          placeholder="Введите сообщение..."
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
-        <ImgBlockPointer src={send} alt="send" onClick={sendMessage} />
+        {dialogsService.currentDialog && (
+          <>
+            <Input
+              type="text"
+              placeholder="Введите сообщение..."
+              onChange={(e) => setValue(e.target.value)}
+              value={value}
+            />
+            <ImgBlockPointer src={send} alt="send" onClick={sendMessage} />
+          </>
+        )}
       </ChatInputContainer>
     </form>
   );
 };
+
+export default React.memo(observer(ChatInput));

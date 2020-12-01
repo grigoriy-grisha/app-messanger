@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import message from "../../static/img/message.svg";
 import React from "react";
 
 const DialogSearchContainer = styled.div`
@@ -41,13 +40,15 @@ interface IProps {
   users: UsersInterface[];
   id: string;
   clickOnDialogItem: (id: string) => void;
+  img: any;
 }
 
-export const DialogSearchItem: React.FC<IProps> = ({
+export const DialogItem: React.FC<IProps> = ({
   name,
   users,
   id,
   clickOnDialogItem,
+  img,
 }) => {
   return (
     <DialogSearchContainer onClick={() => clickOnDialogItem(id)}>
@@ -58,7 +59,7 @@ export const DialogSearchItem: React.FC<IProps> = ({
         </DialogSearchCountUsers>
       </div>
       <DialogSearchIcon>
-        <img src={message} alt="dialog" />
+        <img src={img} alt="dialog" />
       </DialogSearchIcon>
     </DialogSearchContainer>
   );

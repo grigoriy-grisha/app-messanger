@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import createDialog from "../static/img/createDialog.svg";
+import logout from "../static/img/logout.svg";
 import { ImgBlock } from "./TopSide/TopSide";
 import React from "react";
+import { authService } from "../store/AuthService";
 
 const AsideBarContainer = styled.div`
   position: fixed;
@@ -44,6 +46,11 @@ export const AsideBar = () => {
   return (
     <AsideBarContainer>
       <AsideBarBlock>
+        <AsideItem
+          src={logout}
+          alt="createDialog"
+          onClick={authService.logoutAction}
+        />
         <AsideItem src={createDialog} alt="createDialog" />
       </AsideBarBlock>
     </AsideBarContainer>
