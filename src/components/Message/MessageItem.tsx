@@ -36,11 +36,14 @@ const MessageText = styled.div`
   padding: 10px 15px 13px 19px;
 `;
 
-const MessageAvatar = styled.div`
+export const Avatar = styled.div`
   height: 30px;
   width: 30px;
   border-radius: 50%;
   background: beige;
+`;
+
+const MessageAvatar = styled(Avatar)`
   margin: 13px 13px 24px 13px;
 `;
 
@@ -78,4 +81,4 @@ const MessageItem: React.FC<IProps> = ({ id, text, date }) => {
   );
 };
 
-export default observer(MessageItem);
+export default React.memo(observer(MessageItem));

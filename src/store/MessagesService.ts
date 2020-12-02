@@ -5,7 +5,7 @@ import { catchAlerts } from "../utils/catchAlerts";
 import { getAction, postAction } from "../utils/fetchActions";
 
 class MessagesService {
-  messages: Array<any> = [];
+  messages: any[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -14,18 +14,18 @@ class MessagesService {
   @catchAlerts
   async getMessagesById(id: string) {
     const result = await getAction(`/message/get/${id}`);
-    dialogsService.currentDialog = result.dialog;
+    console.log(result);
     this.messages = result.messages;
     return result;
   }
 
   @catchAlerts
   async sendMessage(message: string) {
-    const postData = {
-      text: message,
-      dialog: dialogsService.currentId,
-    };
-    return await postAction("/redirect", postData);
+    const postData = { text: message };
+    return await postAction(
+      `/message/${dialogsService.currentDialogId}/add`,
+      postData
+    );
   }
 }
 

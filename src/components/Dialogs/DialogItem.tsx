@@ -5,6 +5,8 @@ const DialogSearchContainer = styled.div`
   width: 100%;
   padding: 10px 35px;
   transition: 0.1s;
+  background: ${({ active }: { active: boolean }) =>
+    active ? "#f3f7ff" : "#ffffff"};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,32 +37,39 @@ const DialogSearchIcon = styled.div`
   height: 23px;
 `;
 
-interface IProps {
+interface DialogItemInterface {
   name: string;
   users: UsersInterface[];
   id: string;
-  clickOnDialogItem: (id: string) => void;
+  onDialogItemClick: (id: string) => void;
   img: any;
+  active?: boolean;
 }
 
-export const DialogItem: React.FC<IProps> = ({
-  name,
-  users,
-  id,
-  clickOnDialogItem,
-  img,
-}) => {
-  return (
-    <DialogSearchContainer onClick={() => clickOnDialogItem(id)}>
-      <div>
-        <DialogSearchName>{name}</DialogSearchName>
-        <DialogSearchCountUsers>
-          {users.length} Участников
-        </DialogSearchCountUsers>
-      </div>
-      <DialogSearchIcon>
-        <img src={img} alt="dialog" />
-      </DialogSearchIcon>
-    </DialogSearchContainer>
-  );
-};
+export const DialogItem = React.memo(
+  ({
+    name,
+    users,
+    id,
+    onDialogItemClick,
+    img,
+    active = false,
+  }: DialogItemInterface) => {
+    return (
+      <DialogSearchContainer
+        active={active}
+        onClick={() => onDialogItemClick(id)}
+      >
+        <div>
+          <DialogSearchName>{name}</DialogSearchName>
+          <DialogSearchCountUsers>
+            {users.length} Участников
+          </DialogSearchCountUsers>
+        </div>
+        <DialogSearchIcon>
+          <img src={img} alt="dialog" />
+        </DialogSearchIcon>
+      </DialogSearchContainer>
+    );
+  }
+);

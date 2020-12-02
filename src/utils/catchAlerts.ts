@@ -6,9 +6,9 @@ export function catchAlerts(
   descriptor: PropertyDescriptor
 ) {
   const classMethod: Function = descriptor.value;
-  descriptor.value = async function (args: any[]) {
+  descriptor.value = async function (...args: any[]) {
     try {
-      return await classMethod.call(this, ...[args]);
+      return await classMethod.apply(this, args);
     } catch (e) {
       alertService.showAlert(e.message);
     }

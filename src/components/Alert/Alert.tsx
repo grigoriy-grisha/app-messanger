@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import {observer} from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import React from "react";
-import {alertService} from "../../store/AlertService";
+import { alertService } from "../../store/AlertService";
 
 const AlertContainer = styled.div`
   position: absolute;
@@ -10,19 +10,13 @@ const AlertContainer = styled.div`
   padding: 15px;
   top: 35px;
   right: 35px;
-  background: #3674FF;
+  background: #3674ff;
   box-shadow: 0px 5px 5px rgba(54, 116, 255, 0.196733);
   border-radius: 5px 5px 5px 5px;
   z-index: 9999;
-`
-
+`;
 
 export const Alert = observer(() => {
-
-  return (
-    <>
-      {alertService.message && <AlertContainer>{alertService.message}</AlertContainer>}
-    </>
-
-  )
-})
+  if (!alertService.message) return null;
+  return <AlertContainer>{alertService.message}</AlertContainer>;
+});

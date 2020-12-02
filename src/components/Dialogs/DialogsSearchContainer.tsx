@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { DialogItem } from "./DialogItem";
 import styled from "styled-components";
 import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
-import { useHistory } from "react-router-dom";
 import message from "../../static/img/message.svg";
+
+// @ts-ignore
+import { addDialogsModalService } from "../../store/ModalService/AddDialogsModalService";
 
 const DialogsWrap = styled.div`
   overflow-y: scroll;
@@ -12,26 +14,22 @@ const DialogsWrap = styled.div`
   height: 93%;
 `;
 
-interface DialogsContainerInterface {}
-
-export const DialogsSearchContainer = ({}: DialogsContainerInterface) => {
-  const history = useHistory();
-
+const DialogsSearchContainer = () => {
   useEffect(() => {
-    dialogsService.getAllDialogs().then();
+    dialogsService.getAllDialogs();
   }, []);
 
-  const clickOnDialogItem = (id: string) => {
-    history.push(`${id}`);
-    dialogsService.changeCurrentId(id);
-  };
+  const onDialogItemClick = useCallback((id: string) => {
+    addDialogsModalService.setDialogId(id);
+    addDialogsModalService.open();
+  }, []);
 
   return (
     <DialogsWrap>
-      {dialogsService.dialogs.map((dialog: DialogsInterface) => {
+      {dialogsService.dialogs.map((dialog) => {
         return (
           <DialogItem
-            clickOnDialogItem={clickOnDialogItem}
+            onDialogItemClick={onDialogItemClick}
             key={dialog._id}
             id={dialog._id}
             name={dialog.name}

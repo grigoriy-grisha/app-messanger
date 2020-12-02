@@ -13,6 +13,9 @@ body {
 a {
   text-decoration: none;
 }
+input {
+  display: block;
+}
 
 ::-webkit-scrollbar {
   width: 6px;

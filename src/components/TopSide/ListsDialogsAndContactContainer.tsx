@@ -4,6 +4,7 @@ import chat from "../../static/img/chat.svg";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { dialogsService } from "../../store/DialogsService";
+import { listModeService } from "../../store/DialogsService/ListModeService";
 
 const ListsDialogsAndContactWrap = styled.div`
   border-bottom: 1px solid #dddddd;
@@ -12,17 +13,19 @@ const ListsDialogsAndContactWrap = styled.div`
   display: flex;
 `;
 
-const ListType = styled.div`
+interface ListTypeInterface {
+  isActive: boolean;
+}
+
+const ListType = styled.div<ListTypeInterface>`
   width: 50%;
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background: ${({ theme }) => {
-    console.log(theme);
-    return theme.value === theme.number ? "#f3f7ff" : "#ffffff";
-  }};
+  background: ${({ isActive }) =>
+    isActive === listModeService.isSearchDialogsMode ? "#f3f7ff" : "#ffffff"}};
   &:hover {
     background: #f3f7ff;
   }
@@ -31,26 +34,22 @@ const ListType = styled.div`
 interface IProps {}
 
 export const ListsDialogsAndContactContainer: React.FC<IProps> = () => {
-  const [value, setValue] = useState(1);
-
   return (
     <ListsDialogsAndContactWrap>
       <ListType
-        theme={{ value, number: 0 }}
+        isActive={true}
         onClick={() => {
-          setValue(0);
-          dialogsService.changeDialogsMode(true);
+          listModeService.changeDialogsMode(true);
         }}
       >
         <ImgBlock src={message} alt="message" />
         Список Диалогов
       </ListType>
       <ListType
-        theme={{ value, number: 1 }}
+        isActive={false}
         onClick={() => {
-          setValue(1);
-          dialogsService.getDialogs().then();
-          dialogsService.changeDialogsMode(false);
+          dialogsService.getDialogs();
+          listModeService.changeDialogsMode(false);
         }}
       >
         <ImgBlock src={chat} alt="chat" />

@@ -1,48 +1,66 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { DialogItem } from "./DialogItem";
-import styled from "styled-components";
-import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { messageService } from "../../store/MessagesService";
+import styled from "styled-components";
+import { dialogsService } from "../../store/DialogsService";
+import { CenterElement, PreventiveMessage } from "../../App";
 import arrow from "../../static/img/arrow.svg";
+import socket from "../../utils/socket";
 
-const DialogsWrap = styled.div`
+const DialogsWrapper = styled.div`
   overflow-y: scroll;
+  position: relative;
   max-height: 100%;
   height: 93%;
 `;
 
-interface DialogsContainerInterface {}
-
-export const DialogsAddedContainer = ({}: DialogsContainerInterface) => {
+export const DialogsAddedContainer = () => {
   const history = useHistory();
-  useEffect(() => {
-    dialogsService.getDialogs().then();
-  }, []);
 
-  const clickOnDialogItem = (id: string) => {
-    messageService.getMessagesById(id).then(() => {
-      history.push(`${id}`);
-      dialogsService.changeCurrentId(id);
-    });
+  const addDialog = (dialog: any) => {
+    dialogsService.dialogs.push(dialog);
+    history.push("/" + dialog._id);
   };
 
+  useEffect(() => {
+    dialogsService.getDialogs();
+    socket.on("SERVER:DIALOG_CREATED", ({ dialog }: any) => {
+      addDialog(dialog);
+    });
+    return () => {
+      socket.off("SERVER:DIALOG_CREATED", ({ dialog }: any) => {
+        addDialog(dialog);
+      });
+    };
+  }, []);
+
+  const onDialogItemClick = useCallback((id: string) => {
+    history.push(`${id}`);
+  }, []);
+
   return (
-    <DialogsWrap>
-      {dialogsService.dialogs.map((dialog: DialogsInterface) => {
-        return (
-          <DialogItem
-            clickOnDialogItem={clickOnDialogItem}
-            key={dialog._id}
-            id={dialog._id}
-            name={dialog.name}
-            users={dialog.users}
-            img={arrow}
-          />
-        );
-      })}
-    </DialogsWrap>
+    <DialogsWrapper>
+      {dialogsService.dialogs.length ? (
+        dialogsService.dialogs.map((dialog: DialogsInterface) => {
+          return (
+            <DialogItem
+              onDialogItemClick={onDialogItemClick}
+              active={dialogsService.currentDialogId == dialog._id}
+              key={dialog._id}
+              id={dialog._id}
+              name={dialog.name}
+              users={dialog.users}
+              img={arrow}
+            />
+          );
+        })
+      ) : (
+        <CenterElement>
+          <PreventiveMessage>Пока что нет диалогов!</PreventiveMessage>
+        </CenterElement>
+      )}
+    </DialogsWrapper>
   );
 };
 

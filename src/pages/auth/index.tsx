@@ -85,7 +85,6 @@ export const ErrorText = styled.span`
 export const Auth: React.FC<IProps> = observer(() => {
   return (
     <div>
-      <Redirect from="/" to="/auth/register" />
       <Route path="/auth/login">
         <Login />
       </Route>

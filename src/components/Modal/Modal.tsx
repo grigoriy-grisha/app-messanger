@@ -1,14 +1,14 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import styled from "styled-components";
 
 export const Modal = ({ children }: { children: JSX.Element }) => {
   const el = document.createElement("div");
   useEffect(() => {
-    document.appendChild(el);
+    document.body.appendChild(el);
     return () => {
-      document.removeChild(el);
+      document.body.removeChild(el);
     };
   }, []);
-
   return ReactDOM.createPortal(children, el);
 };

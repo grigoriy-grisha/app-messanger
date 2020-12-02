@@ -3,8 +3,6 @@ import React, { FormEvent, useState } from "react";
 import { ImgBlockPointer } from "../TopSide/TopSide";
 import send from "../../static/img/send.svg";
 import { messageService } from "../../store/MessagesService";
-import { alertService } from "../../store/AlertService";
-import socket from "../../utils/socket";
 import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
 
@@ -34,11 +32,12 @@ const Input = styled.input`
 const ChatInput = () => {
   const [value, setValue] = useState("");
 
-  const sendMessage = (e: FormEvent<HTMLFormElement | HTMLImageElement>) => {
+  const sendMessage = (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
-
     if (!value) return;
-    messageService.sendMessage(value).then(() => setValue(""));
+    messageService.sendMessage(value).then(() => {
+      setValue("");
+    });
   };
 
   return (

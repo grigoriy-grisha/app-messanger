@@ -2,7 +2,7 @@ import { URL } from "../constant";
 import { storageService } from "../store/StorageService";
 
 class Http {
-  private readonly MyHeaders: Headers;
+  MyHeaders: Headers;
 
   constructor() {
     this.MyHeaders = new Headers();

@@ -15,6 +15,7 @@ const Routes = observer(() => {
   if (cookiesService.redirect) {
     return <RedirectPage />;
   }
+
   return (
     <div className="App">
       {authService.isAuth ? (
@@ -28,6 +29,7 @@ const Routes = observer(() => {
         </>
       ) : (
         <>
+          <Redirect from="/" to="/auth/register" />
           <Auth />
         </>
       )}

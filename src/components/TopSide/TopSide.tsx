@@ -50,10 +50,10 @@ export const TopSide = observer(() => {
           <div />
           <DialogInfo>
             <DialogSearchName>
-              {dialogsService.currentDialog?.name}
+              {dialogsService.currentDialog.name}
             </DialogSearchName>
             <DialogSearchCountUsers>
-              {dialogsService.currentDialog?.users.length} Участников
+              {dialogsService.currentDialog.users.length} Участников
             </DialogSearchCountUsers>
           </DialogInfo>
           <ImgBlockPointer src={settings} alt="settings" />

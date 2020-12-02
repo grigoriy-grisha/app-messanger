@@ -1,14 +1,14 @@
 import React from "react";
 import { Messenger } from "../../components/Messenger";
-import { AsideBar } from "../../components/AsideBar";
-import { CreateDialog } from "../../components/Modal/CreateDialog";
+import AsideBar from "../../components/AsideBar";
+import { AddDialog } from "../../components/Modal/AddDialog/AddDialog";
 
 interface IProps {}
 
 export const Main: React.FC<IProps> = () => {
   return (
     <div>
-      <CreateDialog />
+      {/*<AddDialog />*/}
       <AsideBar />
       <Messenger />
     </div>

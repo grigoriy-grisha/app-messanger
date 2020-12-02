@@ -1,24 +1,19 @@
 import { makeAutoObservable } from "mobx";
-import { http } from "../utils/Http";
 import { catchAlerts } from "../utils/catchAlerts";
-import { log } from "util";
 import { getAction, postAction } from "../utils/fetchActions";
 
 class DialogsService {
-  currentId: string | null = null;
+  currentDialogId: string | null = null;
   dialogs: DialogsInterface[] = [];
   currentDialog: DialogsInterface | null = null;
-  searchDialogsMode: boolean = false;
+
   constructor() {
     makeAutoObservable(this);
   }
 
   @catchAlerts
   async getDialogs() {
-    const response = await http.get("/dialog/get");
-    const result: any = await response.json();
-    if (!response.ok) throw new Error(result.message);
-    this.dialogs = result;
+    this.dialogs = await getAction("/dialog/get");
   }
 
   @catchAlerts
@@ -28,16 +23,17 @@ class DialogsService {
   }
 
   @catchAlerts
-  async addDialogs(body: any) {
-    await postAction("/redirect", body);
+  async userAddInDialog(dialogId: object) {
+    return await postAction("/dialog/addUser", dialogId);
   }
 
-  changeDialogsMode(state: boolean) {
-    this.searchDialogsMode = state;
+  @catchAlerts
+  async getDialogInfo(id: string) {
+    this.currentDialog = await getAction("/dialog/getDialog/" + id);
   }
 
   changeCurrentId(id: string) {
-    this.currentId = id;
+    this.currentDialogId = id;
   }
 }
 

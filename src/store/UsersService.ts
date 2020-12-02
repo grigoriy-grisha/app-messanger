@@ -2,8 +2,9 @@ import { makeAutoObservable } from "mobx";
 import { getAction } from "../utils/fetchActions";
 import { catchAlerts } from "../utils/catchAlerts";
 
-class UserService {
+class UsersService {
   users: Array<UsersInterface> = [];
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -11,8 +12,8 @@ class UserService {
   @catchAlerts
   async getUsers() {
     const result = await getAction("/user/all");
-    this.users = result;
+    this.users = result.users;
   }
 }
 
-export const userService = new UserService();
+export const usersService = new UsersService();

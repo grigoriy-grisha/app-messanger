@@ -4,6 +4,10 @@ import logout from "../static/img/logout.svg";
 import { ImgBlock } from "./TopSide/TopSide";
 import React from "react";
 import { authService } from "../store/AuthService";
+import { Modal } from "./Modal/Modal";
+import CreateDialog from "./Modal/CreateDialog/CreateDialog";
+import { createDialogModalService } from "../store/ModalService/CreateDialogModalService";
+import { observer } from "mobx-react-lite";
 
 const AsideBarContainer = styled.div`
   position: fixed;
@@ -42,7 +46,7 @@ const AsideItem = styled(ImgBlock)`
   cursor: pointer;
 `;
 
-export const AsideBar = () => {
+const AsideBar = () => {
   return (
     <AsideBarContainer>
       <AsideBarBlock>
@@ -51,8 +55,20 @@ export const AsideBar = () => {
           alt="createDialog"
           onClick={authService.logoutAction}
         />
-        <AsideItem src={createDialog} alt="createDialog" />
+        <AsideItem
+          src={createDialog}
+          alt="createDialog"
+          onClick={createDialogModalService.open}
+        />
       </AsideBarBlock>
+
+      {createDialogModalService.isOpen && (
+        <Modal>
+          <CreateDialog />
+        </Modal>
+      )}
     </AsideBarContainer>
   );
 };
+
+export default observer(AsideBar);

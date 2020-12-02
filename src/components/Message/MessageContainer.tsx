@@ -3,8 +3,10 @@ import MessageItem from "./MessageItem";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import { CenterElement } from "../../App";
+import { CenterElement, PreventiveMessage } from "../../App";
 import { dialogsService } from "../../store/DialogsService";
+import { useParams } from "react-router-dom";
+import socket from "../../utils/socket";
 
 const MessageWrap = styled.div`
   position: relative;
@@ -13,42 +15,63 @@ const MessageWrap = styled.div`
   overflow-y: scroll;
 `;
 
-const PreventiveMessage = styled.h2`
-  font-size: 21px;
-  color: #666666;
-`;
-
-interface IProps {}
-
-export const MessageContainer: React.FC<IProps> = observer(() => {
+export const MessageContainer = observer(() => {
   const messageRef = useRef<HTMLDivElement>(null);
+  const params: { id: string } = useParams();
+  const addMessage = (message: any) => {
+    messageService.messages.push(message);
+  };
+  //TODO при выходе отчищать все
+  useEffect(() => {
+    socket.on("SERVER:NEW_MESSAGE", ({ message }: any) => {
+      console.log(message);
+      addMessage(message);
+    });
+    return () => {
+      socket.off("SERVER:NEW_MESSAGE", ({ message }: any) => {
+        addMessage(message);
+      });
+    };
+  }, []);
 
   useEffect(() => {
-    messageRef.current!.scrollTop = 9999;
+    if (messageRef.current) messageRef.current.scrollTop = 9999;
   }, [messageService.messages]);
 
-  return (
-    <MessageWrap ref={messageRef}>
-      {messageService.messages.length ? (
-        messageService.messages.map((item: any) => {
-          return (
-            <MessageItem
-              key={item._id}
-              id={item.author}
-              text={item.text}
-              date={item.createdAt}
-            />
-          );
-        })
-      ) : (
+  useEffect(() => {
+    if (!params.id) return;
+
+    dialogsService.getDialogInfo(params.id);
+    messageService.getMessagesById(params.id).then(() => {
+      dialogsService.changeCurrentId(params.id);
+    });
+  }, [params.id]);
+  if (messageService.messages.length === 0) {
+    return (
+      <MessageWrap ref={messageRef}>
         <CenterElement>
-          {dialogsService.currentId ? (
+          {!!dialogsService.currentDialogId ? (
             <PreventiveMessage>Пока что нет сообщений!</PreventiveMessage>
           ) : (
             <PreventiveMessage>Откройте Диалог</PreventiveMessage>
           )}
         </CenterElement>
-      )}
+      </MessageWrap>
+    );
+  }
+
+  return (
+    <MessageWrap ref={messageRef}>
+      {messageService.messages.map((item) => {
+        return (
+          <MessageItem
+            key={item._id}
+            id={item.author}
+            text={item.text}
+            date={item.createdAt}
+          />
+        );
+      })}
     </MessageWrap>
   );
 });

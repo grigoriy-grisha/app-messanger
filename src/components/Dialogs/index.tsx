@@ -3,8 +3,8 @@ import React from "react";
 import styled from "styled-components";
 import DialogsAddedContainer from "./DialogsAddedContainer";
 import DialogsSearchContainer from "./DialogsSearchContainer";
-import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
+import { listModeService } from "../../store/DialogsService/ListModeService";
 
 const DialogsContainerWrapper = styled.div`
   width: 29%;
@@ -16,7 +16,7 @@ const Dialogs = () => {
     <DialogsContainerWrapper>
       <ListsDialogsAndContactContainer />
       <>
-        {dialogsService.searchDialogsMode ? (
+        {listModeService.isSearchDialogsMode ? (
           <DialogsSearchContainer />
         ) : (
           <DialogsAddedContainer />
