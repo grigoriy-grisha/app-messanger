@@ -7,6 +7,7 @@ import { CenterElement, PreventiveMessage } from "../../App";
 import { dialogsService } from "../../store/DialogsService";
 import { useParams } from "react-router-dom";
 import socket from "../../utils/socket";
+import {toJS} from "mobx";
 
 const MessageWrap = styled.div`
   position: relative;
@@ -16,6 +17,8 @@ const MessageWrap = styled.div`
 `;
 
 export const MessageContainer = observer(() => {
+
+
   const messageRef = useRef<HTMLDivElement>(null);
   const params: { id: string } = useParams();
   const addMessage = (message: any) => {
@@ -63,12 +66,14 @@ export const MessageContainer = observer(() => {
   return (
     <MessageWrap ref={messageRef}>
       {messageService.messages.map((item) => {
+        console.log(toJS(item))
         return (
           <MessageItem
             key={item._id}
-            id={item.author}
+            id={item.author._id}
             text={item.text}
             date={item.createdAt}
+            name={item.author.fullname}
           />
         );
       })}

@@ -19,6 +19,7 @@ class DialogsService {
   @catchAlerts
   async getAllDialogs() {
     const result = await getAction("/dialog/all");
+    console.log(result.dialogs)
     this.dialogs = result.dialogs;
   }
 

@@ -31,9 +31,9 @@ const ListType = styled.div<ListTypeInterface>`
   }
 `;
 
-interface IProps {}
 
-export const ListsDialogsAndContactContainer: React.FC<IProps> = () => {
+
+export const ListsDialogsAndContactContainer = () => {
   return (
     <ListsDialogsAndContactWrap>
       <ListType
@@ -48,7 +48,6 @@ export const ListsDialogsAndContactContainer: React.FC<IProps> = () => {
       <ListType
         isActive={false}
         onClick={() => {
-          dialogsService.getDialogs();
           listModeService.changeDialogsMode(false);
         }}
       >

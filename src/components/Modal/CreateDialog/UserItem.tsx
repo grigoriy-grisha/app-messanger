@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { Avatar } from "../../Message/MessageItem";
+import {generateColorAvatar} from "../../../utils/generateAvatar";
 
 interface UserItemProps {
   active: boolean;
@@ -39,7 +40,7 @@ export const UserItem = ({
 }: PropsInterface) => {
   return (
     <UserItemBLock onClick={() => onUserItemClick(id)} active={active}>
-      <Avatar />
+      <Avatar background={generateColorAvatar(id)}>{fullname[0]}</Avatar>
       <UserItemName>{fullname}</UserItemName>
     </UserItemBLock>
   );

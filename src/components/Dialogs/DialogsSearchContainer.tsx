@@ -7,6 +7,7 @@ import message from "../../static/img/message.svg";
 
 // @ts-ignore
 import { addDialogsModalService } from "../../store/ModalService/AddDialogsModalService";
+import {toJS} from "mobx";
 
 const DialogsWrap = styled.div`
   overflow-y: scroll;
@@ -18,7 +19,6 @@ const DialogsSearchContainer = () => {
   useEffect(() => {
     dialogsService.getAllDialogs();
   }, []);
-
   const onDialogItemClick = useCallback((id: string) => {
     addDialogsModalService.setDialogId(id);
     addDialogsModalService.open();
