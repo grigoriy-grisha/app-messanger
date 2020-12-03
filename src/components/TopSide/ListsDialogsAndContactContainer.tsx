@@ -3,8 +3,8 @@ import message from "../../static/img/message.svg";
 import chat from "../../static/img/chat.svg";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { dialogsService } from "../../store/DialogsService";
-import { listModeService } from "../../store/DialogsService/ListModeService";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
+import { changeModeService } from "../../store/DialogsService/ChangeModeService";
 
 const ListsDialogsAndContactWrap = styled.div`
   border-bottom: 1px solid #dddddd;
@@ -25,13 +25,13 @@ const ListType = styled.div<ListTypeInterface>`
   align-items: center;
   cursor: pointer;
   background: ${({ isActive }) =>
-    isActive === listModeService.isSearchDialogsMode ? "#f3f7ff" : "#ffffff"}};
+    isActive === changeModeService.isSearchDialogsMode
+      ? "#f3f7ff"
+      : "#ffffff"}};
   &:hover {
     background: #f3f7ff;
   }
 `;
-
-
 
 export const ListsDialogsAndContactContainer = () => {
   return (
@@ -39,7 +39,7 @@ export const ListsDialogsAndContactContainer = () => {
       <ListType
         isActive={true}
         onClick={() => {
-          listModeService.changeDialogsMode(true);
+          changeModeService.changeDialogsMode(true);
         }}
       >
         <ImgBlock src={message} alt="message" />
@@ -48,7 +48,7 @@ export const ListsDialogsAndContactContainer = () => {
       <ListType
         isActive={false}
         onClick={() => {
-          listModeService.changeDialogsMode(false);
+          changeModeService.changeDialogsMode(false);
         }}
       >
         <ImgBlock src={chat} alt="chat" />

@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import React from "react";
 import { Avatar } from "../../Message/MessageItem";
-import {generateColorAvatar} from "../../../utils/generateAvatar";
+import React from "react";
+import { generateColorAvatar } from "../../../utils/generateAvatar";
 
 interface UserItemProps {
   active: boolean;
@@ -32,7 +32,7 @@ interface PropsInterface {
   id: string;
 }
 
-export const UserItem = ({
+const UserItem = ({
   fullname,
   active,
   onUserItemClick,
@@ -45,3 +45,5 @@ export const UserItem = ({
     </UserItemBLock>
   );
 };
+
+export default React.memo(UserItem);

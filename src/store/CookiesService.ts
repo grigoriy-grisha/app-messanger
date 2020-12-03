@@ -9,7 +9,6 @@ class CookiesService {
 
   getCookie() {
     this.redirect = !!cookie.get("redirect");
-    console.log(this.redirect);
   }
 
   removeCookie(name: "redirect") {

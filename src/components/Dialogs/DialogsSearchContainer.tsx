@@ -1,31 +1,37 @@
 import React, { useCallback, useEffect } from "react";
-import { DialogItem } from "./DialogItem";
-import styled from "styled-components";
-import { dialogsService } from "../../store/DialogsService";
+import DialogItem from "./DialogItem";
+
+import { dialogsService } from "../../store/DialogsService/DialogsService";
 import { observer } from "mobx-react-lite";
 import message from "../../static/img/message.svg";
-
-// @ts-ignore
 import { addDialogsModalService } from "../../store/ModalService/AddDialogsModalService";
-import {toJS} from "mobx";
-
-const DialogsWrap = styled.div`
-  overflow-y: scroll;
-  max-height: 100%;
-  height: 93%;
-`;
+import { DialogsWrapper } from "./index";
+import { CenterElement } from "../../App";
+import { Loader } from "../Loader";
 
 const DialogsSearchContainer = () => {
   useEffect(() => {
-    dialogsService.getAllDialogs();
+    dialogsService.isLoading = true;
+    dialogsService.getAllDialogs().then(() => {
+      dialogsService.isLoading = false;
+    });
   }, []);
   const onDialogItemClick = useCallback((id: string) => {
     addDialogsModalService.setDialogId(id);
     addDialogsModalService.open();
   }, []);
 
+  if (dialogsService.isLoading)
+    return (
+      <DialogsWrapper>
+        <CenterElement>
+          <Loader />
+        </CenterElement>
+      </DialogsWrapper>
+    );
+
   return (
-    <DialogsWrap>
+    <DialogsWrapper>
       {dialogsService.dialogs.map((dialog) => {
         return (
           <DialogItem
@@ -38,8 +44,8 @@ const DialogsSearchContainer = () => {
           />
         );
       })}
-    </DialogsWrap>
+    </DialogsWrapper>
   );
 };
 
-export default React.memo(observer(DialogsSearchContainer));
+export default observer(DialogsSearchContainer);

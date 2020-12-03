@@ -7,7 +7,6 @@ class AddDialogsModalService {
   constructor() {
     makeAutoObservable(this);
   }
-
   close = () => (this.isOpen = false);
   open = () => (this.isOpen = true);
   setDialogId = (id: string) => (this.currentDialogId = id);

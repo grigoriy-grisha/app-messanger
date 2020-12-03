@@ -8,16 +8,12 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-
 import { Link, useHistory } from "react-router-dom";
-import { observer } from "mobx-react-lite";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
 import { authService } from "../../../store/AuthService";
+import { usersService } from "../../../store/UsersService";
 
-interface IProps {}
-
-export const Login: React.FC<IProps> = () => {
-  const history = useHistory();
+const Login = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
 
@@ -26,17 +22,11 @@ export const Login: React.FC<IProps> = () => {
   const onSubmitRequest = async (e: FormEvent) => {
     e.preventDefault();
     if (!emailValue && !passwordValue) return;
-
-    const body = {
-      email: emailValue,
-      password: passwordValue,
-    };
-
     setEmailValue("");
     setPasswordValue("");
-
-    await authService.loginAction(body).then((res: any) => {
-      if (res) history.push("/");
+    await authService.loginAction({
+      email: emailValue,
+      password: passwordValue,
     });
   };
 
@@ -51,16 +41,13 @@ export const Login: React.FC<IProps> = () => {
             type="email"
             validate={validateEmail}
           />
-          {validateEmail ? (
-            <ErrorText>Введите правильный email!</ErrorText>
-          ) : null}
+          {validateEmail && <ErrorText>Введите правильный email!</ErrorText>}
           <AuthInput
             placeholder="Пароль"
             type="password"
             onChange={(e) => setPasswordValue(e.target.value)}
             value={passwordValue}
           />
-          {null}
           <AuthSubmitButton>Войти в аккаунт</AuthSubmitButton>
         </form>
         <Link to="/auth/register">
@@ -71,4 +58,4 @@ export const Login: React.FC<IProps> = () => {
   );
 };
 
-export default observer(Login);
+export default Login;

@@ -1,10 +1,10 @@
-import styled from "styled-components";
 import React, { FormEvent, useState } from "react";
-import { ImgBlockPointer } from "../TopSide/TopSide";
 import send from "../../static/img/send.svg";
-import { messageService } from "../../store/MessagesService";
-import { dialogsService } from "../../store/DialogsService";
 import { observer } from "mobx-react-lite";
+import styled from "styled-components";
+import { ImgBlockPointer } from "../TopSide/TopSide";
+import { messageService } from "../../store/MessagesService";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
 
 const ChatInputContainer = styled.div`
   width: 100%;
@@ -35,9 +35,8 @@ const ChatInput = () => {
   const sendMessage = (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
     if (!value) return;
-    messageService.sendMessage(value).then(() => {
-      setValue("");
-    });
+    console.log(value);
+    messageService.sendMessage(value).then(() => setValue(""));
   };
 
   return (
@@ -59,4 +58,4 @@ const ChatInput = () => {
   );
 };
 
-export default React.memo(observer(ChatInput));
+export default observer(ChatInput);

@@ -9,10 +9,8 @@ class CreateDialogModalService {
   constructor() {
     makeAutoObservable(this);
   }
-
   close = () => (this.isOpen = false);
   open = () => (this.isOpen = true);
-
   addAndRemoveIdUser(id: string) {
     let clone = toJS(this.idUserAwaitingAddition);
     const index = clone.findIndex((item) => id === item);
@@ -27,7 +25,6 @@ class CreateDialogModalService {
   @catchAlerts
   createDialog(name: string, protect: boolean) {
     const users = this.idUserAwaitingAddition;
-    console.log({ name, users, protect });
     return postAction("/dialog/createDialog", { name, users, protect });
   }
 }

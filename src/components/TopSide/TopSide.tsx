@@ -1,12 +1,15 @@
-import styled from "styled-components";
+import React from "react";
 import settings from "../../static/img/settings.svg";
 import {
   DialogSearchCountUsers,
   DialogSearchName,
 } from "../Dialogs/DialogItem";
-import React from "react";
+import styled from "styled-components";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
 import { observer } from "mobx-react-lite";
-import { dialogsService } from "../../store/DialogsService";
+import { Modal } from "../Modal/Modal";
+import { dialogInfoService } from "../../store/ModalService/DialogInfoService";
+import { DialogInfoModal } from "../Modal/DialogInfo/DialogInfoModal";
 
 const TopSideWrapper = styled.div`
   width: 100%;
@@ -56,7 +59,16 @@ export const TopSide = observer(() => {
               {dialogsService.currentDialog.users.length} Участников
             </DialogSearchCountUsers>
           </DialogInfo>
-          <ImgBlockPointer src={settings} alt="settings" />
+          <ImgBlockPointer
+            src={settings}
+            alt="settings"
+            onClick={dialogInfoService.open}
+          />
+          {dialogInfoService.isOpen && (
+            <Modal>
+              <DialogInfoModal />
+            </Modal>
+          )}
         </DialogInfoContainer>
       )}
     </TopSideWrapper>

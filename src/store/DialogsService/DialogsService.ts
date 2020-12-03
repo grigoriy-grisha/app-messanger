@@ -1,12 +1,14 @@
-import { makeAutoObservable } from "mobx";
-import { catchAlerts } from "../utils/catchAlerts";
-import { getAction, postAction } from "../utils/fetchActions";
+import { makeAutoObservable, toJS } from "mobx";
+import { catchAlerts } from "../../utils/catchAlerts";
+import { getAction, postAction } from "../../utils/fetchActions";
+import { DialogInterface } from "../../types";
 
 class DialogsService {
   currentDialogId: string | null = null;
-  dialogs: DialogsInterface[] = [];
-  currentDialog: DialogsInterface | null = null;
-
+  dialogs: DialogInterface[] = [];
+  currentDialog: DialogInterface | null = null;
+  linkDialog: string | null = null;
+  isLoading: boolean = false;
   constructor() {
     makeAutoObservable(this);
   }
@@ -19,7 +21,6 @@ class DialogsService {
   @catchAlerts
   async getAllDialogs() {
     const result = await getAction("/dialog/all");
-    console.log(result.dialogs)
     this.dialogs = result.dialogs;
   }
 
@@ -31,10 +32,17 @@ class DialogsService {
   @catchAlerts
   async getDialogInfo(id: string) {
     this.currentDialog = await getAction("/dialog/getDialog/" + id);
+    console.log(toJS(this.currentDialog));
   }
 
   changeCurrentId(id: string) {
     this.currentDialogId = id;
+  }
+
+  clearDialogs() {
+    this.currentDialogId = null;
+    this.dialogs = [];
+    this.currentDialog = null;
   }
 }
 

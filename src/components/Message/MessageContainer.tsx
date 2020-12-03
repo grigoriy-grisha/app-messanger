@@ -1,13 +1,15 @@
-import { messageService } from "../../store/MessagesService";
 import MessageItem from "./MessageItem";
 import React, { useEffect, useRef } from "react";
-import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import { CenterElement, PreventiveMessage } from "../../App";
-import { dialogsService } from "../../store/DialogsService";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 import socket from "../../utils/socket";
-import {toJS} from "mobx";
+import { messageService } from "../../store/MessagesService";
+import { CenterElement, PreventiveMessage } from "../../App";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
+import { toJS } from "mobx";
+import { Loader } from "../Loader";
+import { MessageInterface } from "../../types";
 
 const MessageWrap = styled.div`
   position: relative;
@@ -16,44 +18,58 @@ const MessageWrap = styled.div`
   overflow-y: scroll;
 `;
 
-export const MessageContainer = observer(() => {
-
-
+const MessageContainer = () => {
   const messageRef = useRef<HTMLDivElement>(null);
   const params: { id: string } = useParams();
-  const addMessage = (message: any) => {
+
+  const addMessage = (message: MessageInterface) => {
     messageService.messages.push(message);
   };
-  //TODO при выходе отчищать все
+
   useEffect(() => {
-    socket.on("SERVER:NEW_MESSAGE", ({ message }: any) => {
-      console.log(message);
-      addMessage(message);
-    });
+    socket.on(
+      "SERVER:NEW_MESSAGE",
+      ({ message }: { message: MessageInterface }) => addMessage(message)
+    );
     return () => {
-      socket.off("SERVER:NEW_MESSAGE", ({ message }: any) => {
-        addMessage(message);
-      });
+      socket.off(
+        "SERVER:NEW_MESSAGE",
+        ({ message }: { message: MessageInterface }) => addMessage(message)
+      );
     };
   }, []);
 
   useEffect(() => {
-    if (messageRef.current) messageRef.current.scrollTop = 9999;
-  }, [messageService.messages]);
-
-  useEffect(() => {
     if (!params.id) return;
-
-    dialogsService.getDialogInfo(params.id);
-    messageService.getMessagesById(params.id).then(() => {
-      dialogsService.changeCurrentId(params.id);
+    messageService.isLoading = true;
+    dialogsService.getDialogInfo(params.id).then(() => {
+      messageService.getMessagesById(params.id).then(() => {
+        socket.emit("DIALOGS:JOIN", params.id);
+        messageService.isLoading = false;
+        dialogsService.changeCurrentId(params.id);
+      });
     });
   }, [params.id]);
+
+  useEffect(() => {
+    if (messageRef.current)
+      messageRef.current.scrollTop = messageRef.current.scrollHeight;
+  }, [toJS(messageService.messages)]);
+
+  if (messageService.isLoading)
+    return (
+      <MessageWrap>
+        <CenterElement>
+          <Loader />
+        </CenterElement>
+      </MessageWrap>
+    );
+
   if (messageService.messages.length === 0) {
     return (
       <MessageWrap ref={messageRef}>
         <CenterElement>
-          {!!dialogsService.currentDialogId ? (
+          {dialogsService.currentDialogId ? (
             <PreventiveMessage>Пока что нет сообщений!</PreventiveMessage>
           ) : (
             <PreventiveMessage>Откройте Диалог</PreventiveMessage>
@@ -66,7 +82,6 @@ export const MessageContainer = observer(() => {
   return (
     <MessageWrap ref={messageRef}>
       {messageService.messages.map((item) => {
-        console.log(toJS(item))
         return (
           <MessageItem
             key={item._id}
@@ -74,9 +89,12 @@ export const MessageContainer = observer(() => {
             text={item.text}
             date={item.createdAt}
             name={item.author.fullname}
+            type={item.typeMessage}
           />
         );
       })}
     </MessageWrap>
   );
-});
+};
+
+export default observer(MessageContainer);

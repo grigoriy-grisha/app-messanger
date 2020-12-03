@@ -1,4 +1,4 @@
-import { URL } from "../constant";
+import { URLServer } from "../constant";
 import { storageService } from "../store/StorageService";
 
 class Http {
@@ -11,12 +11,12 @@ class Http {
 
   async get(url: string) {
     await this.getToken();
-    return await fetch(URL + url, { headers: this.MyHeaders });
+    return await fetch(URLServer + url, { headers: this.MyHeaders });
   }
 
   async post(url: string, body = {}) {
     await this.getToken();
-    return await fetch(URL + url, {
+    return await fetch(URLServer + url, {
       method: "POST",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -25,7 +25,7 @@ class Http {
 
   async delete(url: string, body = {}) {
     await this.getToken();
-    return await fetch(URL + url, {
+    return await fetch(URLServer + url, {
       method: "DELETE",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -34,7 +34,7 @@ class Http {
 
   async put(url: string) {
     await this.getToken();
-    return await fetch(URL + url, {
+    return await fetch(URLServer + url, {
       method: "PUT",
       headers: this.MyHeaders,
       redirect: "follow",

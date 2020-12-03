@@ -1,12 +1,12 @@
-import { Wrap } from "../CreateDialog/CreateDialog";
 import React from "react";
 import styled from "styled-components";
 import { PreventiveMessage } from "../../../App";
 import { observer } from "mobx-react-lite";
 import { addDialogsModalService } from "../../../store/ModalService/AddDialogsModalService";
-import { dialogsService } from "../../../store/DialogsService";
+import { dialogsService } from "../../../store/DialogsService/DialogsService";
 import { useHistory } from "react-router-dom";
-import { listModeService } from "../../../store/DialogsService/ListModeService";
+import { changeModeService } from "../../../store/DialogsService/ChangeModeService";
+import { Wrapper } from "../Modal";
 
 const AddDialogBlock = styled.div`
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
@@ -53,21 +53,16 @@ export const AddDialog = observer(() => {
   if (!addDialogsModalService.isOpen) return null;
 
   const onAcceptButtonClick = () => {
-    const postData = {
-      dialog: addDialogsModalService.currentDialogId,
-    };
-    dialogsService.userAddInDialog(postData).then((res) => {
-      if (res) {
-        addDialogsModalService.close();
-        addDialogsModalService.removeDialogId();
-        listModeService.changeDialogsMode(false);
-        history.push("/" + res);
-      } else {
-        addDialogsModalService.close();
-        addDialogsModalService.removeDialogId();
-        history.push("/");
-      }
-    });
+    dialogsService
+      .userAddInDialog({
+        dialog: addDialogsModalService.currentDialogId,
+      })
+      .then((res) => {
+        onCancelButtonCLick();
+        if (!res) return history.push("/dialogs/");
+        changeModeService.changeDialogsMode(false);
+        history.push("/dialogs/" + res);
+      });
   };
 
   const onCancelButtonCLick = () => {
@@ -76,7 +71,7 @@ export const AddDialog = observer(() => {
   };
 
   return (
-    <Wrap>
+    <Wrapper>
       <AddDialogBlock>
         <PreventiveMessage>Хотите Добавиться в чат?</PreventiveMessage>
         <ButtonsBlock>
@@ -84,6 +79,6 @@ export const AddDialog = observer(() => {
           <NoButton onClick={onCancelButtonCLick}>Отмена</NoButton>
         </ButtonsBlock>
       </AddDialogBlock>
-    </Wrap>
+    </Wrapper>
   );
 });

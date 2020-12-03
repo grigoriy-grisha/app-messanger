@@ -16,7 +16,9 @@ const AlertContainer = styled.div`
   z-index: 9999;
 `;
 
-export const Alert = observer(() => {
+export const Alert = () => {
   if (!alertService.message) return null;
   return <AlertContainer>{alertService.message}</AlertContainer>;
-});
+};
+
+export default observer(Alert);

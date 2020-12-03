@@ -1,12 +1,9 @@
 import React from "react";
-import styled from "styled-components";
-import Link, { Redirect, Route, Switch } from "react-router-dom";
-import { Login } from "./login/Login";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Login from "./login/Login";
 import { Register } from "./register/Register";
-import { authService } from "../../store/AuthService";
+import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-
-interface IProps {}
 
 export const AuthWrap = styled.div`
   position: absolute;
@@ -82,15 +79,18 @@ export const ErrorText = styled.span`
   transition: 1s;
 `;
 
-export const Auth: React.FC<IProps> = observer(() => {
+const Auth = () => {
   return (
-    <div>
-      <Route path="/auth/login">
+    <Switch>
+      <Route path="/auth/login" exact>
         <Login />
       </Route>
-      <Route path="/auth/register">
+      <Route path="/auth/register" exact>
         <Register />
       </Route>
-    </div>
+      {/*<Redirect from="/" to="/auth/register" />*/}
+    </Switch>
   );
-});
+};
+
+export default observer(Auth);

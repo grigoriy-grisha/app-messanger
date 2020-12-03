@@ -8,15 +8,12 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-import { Link, useHistory } from "react-router-dom";
 import { authService } from "../../../store/AuthService";
+import { Link, useHistory } from "react-router-dom";
 import { useValidatePassword } from "../../../hooks/useValidatePassword";
 import { useValidateEmail } from "../../../hooks/useValidateEmail";
-import { alertService } from "../../../store/AlertService";
 
-interface IProps {}
-
-export const Register: React.FC<IProps> = () => {
+export const Register = () => {
   const history = useHistory();
 
   const [name, setName] = useState("");
@@ -30,25 +27,22 @@ export const Register: React.FC<IProps> = () => {
   );
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = async (
-    e: FormEvent<HTMLButtonElement | HTMLFormElement>
-  ) => {
+  const onSubmitRequest = async (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
     if (!emailValue && !repeatPasswordValue && !name) return;
-    const body = {
-      email: emailValue,
-      password: repeatPasswordValue,
-      fullname: name,
-    };
-
     setName("");
     setEmailValue("");
     setPasswordValue("");
     setRepeatPasswordValue("");
-
-    await authService.registerAction(body).then((res) => {
-      if (res) history.push("/auth/login");
-    });
+    await authService
+      .registerAction({
+        email: emailValue,
+        password: repeatPasswordValue,
+        fullname: name,
+      })
+      .then((res) => {
+        if (res) history.push("/auth/login");
+      });
   };
   return (
     <AuthWrap>
@@ -61,10 +55,7 @@ export const Register: React.FC<IProps> = () => {
             validate={validateEmail}
             type="email"
           />
-          {validateEmail ? (
-            <ErrorText>Введите правильный email!</ErrorText>
-          ) : null}
-
+          {validateEmail && <ErrorText>Введите правильный email!</ErrorText>}
           <AuthInput
             placeholder="Введите имя"
             onChange={(e) => setName(e.target.value)}
@@ -77,7 +68,6 @@ export const Register: React.FC<IProps> = () => {
             value={passwordValue}
             validate={validatePassword}
           />
-
           <AuthInputValidate
             placeholder="Повторите Пароль"
             type="password"
@@ -85,10 +75,7 @@ export const Register: React.FC<IProps> = () => {
             value={repeatPasswordValue}
             validate={validatePassword}
           />
-          {validatePassword ? (
-            <ErrorText>Пароли должны совпадать!</ErrorText>
-          ) : null}
-
+          {validatePassword && <ErrorText>Пароли должны совпадать!</ErrorText>}
           <AuthSubmitButton type="submit" onSubmit={onSubmitRequest}>
             Войти в аккаунт
           </AuthSubmitButton>

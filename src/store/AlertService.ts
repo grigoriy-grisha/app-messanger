@@ -1,20 +1,19 @@
-import {makeAutoObservable} from "mobx";
+import { makeAutoObservable } from "mobx";
 
 class AlertService {
-  message: string = ''
-
+  message: string = "";
+  isLoading: boolean = false;
   constructor() {
     makeAutoObservable(this);
   }
 
-  showAlert(message: string, ms = 2000) {
-    this.message = message
+  showAlert(message: string, ms = 3300) {
+    this.message = message;
     const timeout = setTimeout(() => {
-      this.message = ''
-      clearTimeout(timeout)
-    }, ms)
+      this.message = "";
+      clearTimeout(timeout);
+    }, ms);
   }
-
 }
 
-export const alertService = new AlertService()
+export const alertService = new AlertService();

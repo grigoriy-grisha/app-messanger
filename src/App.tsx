@@ -1,6 +1,6 @@
 import React from "react";
 import Routes from "./components/Routes";
-import { Alert } from "./components/Alert/Alert";
+import Alert from "./components/Alert/Alert";
 import styled from "styled-components";
 import { Modal } from "./components/Modal/Modal";
 import { AddDialog } from "./components/Modal/AddDialog/AddDialog";

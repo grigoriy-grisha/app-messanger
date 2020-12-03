@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import React from "react";
+import { DialogInterface, UserInterface } from "../../types";
+import { observer } from "mobx-react-lite";
+import socket from "../../utils/socket";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
 
 const DialogSearchContainer = styled.div`
   width: 100%;
@@ -39,37 +43,36 @@ const DialogSearchIcon = styled.div`
 
 interface DialogItemInterface {
   name: string;
-  users: UsersInterface[];
+  users: UserInterface[];
   id: string;
   onDialogItemClick: (id: string) => void;
   img: any;
   active?: boolean;
 }
 
-export const DialogItem = React.memo(
-  ({
-    name,
-    users,
-    id,
-    onDialogItemClick,
-    img,
-    active = false,
-  }: DialogItemInterface) => {
-    return (
-      <DialogSearchContainer
-        active={active}
-        onClick={() => onDialogItemClick(id)}
-      >
-        <div>
-          <DialogSearchName>{name}</DialogSearchName>
-          <DialogSearchCountUsers>
-            {users.length} Участников
-          </DialogSearchCountUsers>
-        </div>
-        <DialogSearchIcon>
-          <img src={img} alt="dialog" />
-        </DialogSearchIcon>
-      </DialogSearchContainer>
-    );
-  }
-);
+const DialogItem = ({
+  name,
+  users,
+  id,
+  onDialogItemClick,
+  img,
+  active = false,
+}: DialogItemInterface) => {
+  return (
+    <DialogSearchContainer
+      active={active}
+      onClick={() => onDialogItemClick(id)}
+    >
+      <div>
+        <DialogSearchName>{name}</DialogSearchName>
+        <DialogSearchCountUsers>
+          {users.length} Участников
+        </DialogSearchCountUsers>
+      </div>
+      <DialogSearchIcon>
+        <img src={img} alt="dialog" />
+      </DialogSearchIcon>
+    </DialogSearchContainer>
+  );
+};
+export default React.memo(observer(DialogItem));

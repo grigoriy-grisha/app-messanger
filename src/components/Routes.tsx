@@ -1,40 +1,40 @@
 import { Redirect, Switch, Route } from "react-router-dom";
-import { Main } from "../pages/main/Main";
-import { Auth } from "../pages/auth";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { authService } from "../store/AuthService";
 import { RedirectPage } from "../pages/redirect/RedirectPage";
+import { Main } from "../pages/main/Main";
+import Auth from "../pages/auth";
+import { authService } from "../store/AuthService";
 import { cookiesService } from "../store/CookiesService";
+import { ChangePassword } from "../pages/auth/changePassword/ChangePassword";
 
-const Routes = observer(() => {
+const Routes = () => {
   useEffect(() => {
     cookiesService.getCookie();
   }, []);
 
-  if (cookiesService.redirect) {
-    return <RedirectPage />;
-  }
+  if (cookiesService.redirect) return <RedirectPage />;
 
   return (
     <div className="App">
       {authService.isAuth ? (
         <>
-          <Redirect from="/auth/" to="/" />
           <Switch>
-            <Route path={["/:id", "/"]} exact>
+            <Route path={["/dialogs/:id", "/dialogs"]} exact>
               <Main />
+            </Route>
+            <Route path="/changePassword">
+              <ChangePassword />
             </Route>
           </Switch>
         </>
       ) : (
         <>
-          <Redirect from="/" to="/auth/register" />
           <Auth />
         </>
       )}
     </div>
   );
-});
+};
 
-export default Routes;
+export default observer(Routes);

@@ -10,7 +10,7 @@ class AuthService {
 
   constructor() {
     makeAutoObservable(this);
-    this.init().then();
+    this.init();
   }
 
   async init() {
@@ -29,6 +29,12 @@ class AuthService {
     const result = await postAction("/user/signin", body);
     await this.setUserFetchAction(result.token, result._id);
     return result;
+  }
+
+  @catchAlerts
+  async changePassword(password: string) {
+    const result = await postAction("/user/changePassword", { password });
+    return result.message;
   }
 
   async setUserFetchAction(token: string, id: string) {

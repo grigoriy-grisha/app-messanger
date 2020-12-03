@@ -5,12 +5,8 @@ export function useValidateEmail(emailValue: string) {
 
   useEffect(() => {
     const match = emailValue.match(/@/);
-
-    if (match) {
-      setValidateEmail(false);
-    } else if (emailValue && !match) {
-      setValidateEmail(true);
-    }
+    if (match) return setValidateEmail(false);
+    if (emailValue && !match) setValidateEmail(true);
   }, [emailValue]);
 
   return validateEmail;

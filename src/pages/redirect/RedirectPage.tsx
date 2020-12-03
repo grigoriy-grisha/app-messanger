@@ -1,31 +1,29 @@
 import React, { useEffect } from "react";
-import { dialogsService } from "../../store/DialogsService";
+import { dialogsService } from "../../store/DialogsService/DialogsService";
 import { cookie } from "../../utils/cookie";
 import { cookiesService } from "../../store/CookiesService";
 import { useHistory } from "react-router-dom";
-import { addDialogsModalService } from "../../store/ModalService/AddDialogsModalService";
-import { listModeService } from "../../store/DialogsService/ListModeService";
+import { changeModeService } from "../../store/DialogsService/ChangeModeService";
+import socket from "../../utils/socket";
 
 export const RedirectPage = () => {
   const history = useHistory();
   useEffect(() => {
-    const postData = {
-      dialog: cookie.get("dialogId"),
-    };
-    dialogsService.userAddInDialog(postData).then((res) => {
-      cookie.delete("dialogId");
-      console.log(res);
-      cookiesService.removeCookie("redirect");
-      if (res) {
-        listModeService.changeDialogsMode(false);
-        history.push("/" + res);
-      } else {
-        addDialogsModalService.close();
-        addDialogsModalService.removeDialogId();
+    dialogsService
+      .userAddInDialog({ dialog: cookie.get("dialogId") })
+      .then((res) => {
+        cookie.delete("dialogId");
+        cookiesService.removeCookie("redirect");
+        changeModeService.changeDialogsMode(false);
+
+        if (res) {
+          socket.emit("DIALOGS:JOIN", res);
+          return history.push(`/dialogs/${res}`);
+        }
+
         history.push("/");
-      }
-    });
+      });
   });
 
-  return <div>redirect</div>;
+  return <div />;
 };
