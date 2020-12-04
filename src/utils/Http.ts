@@ -2,21 +2,34 @@ import { URLServer } from "../constant";
 import { storageService } from "../store/StorageService";
 
 class Http {
-  MyHeaders: Headers;
+  MyHeaders = new Headers();
+  static setToken(target: any, key: string, descriptor: PropertyDescriptor) {
+    let originalMethod = descriptor.value;
+    descriptor.value = async function (this: Http, ...args: any) {
+      this.MyHeaders.delete("Authorization");
+      this.MyHeaders.append(
+        "Authorization",
+        "Bearer " + (await storageService.get("token"))
+      );
+
+      return originalMethod.apply(this, args);
+    };
+  }
 
   constructor() {
-    this.MyHeaders = new Headers();
     this.MyHeaders.append("Content-Type", "application/json");
   }
 
+  private getUrl(url: string) {
+    return URLServer + url;
+  }
+
   async get(url: string) {
-    await this.getToken();
-    return await fetch(URLServer + url, { headers: this.MyHeaders });
+    return await fetch(this.getUrl(url), { headers: this.MyHeaders });
   }
 
   async post(url: string, body = {}) {
-    await this.getToken();
-    return await fetch(URLServer + url, {
+    return await fetch(this.getUrl(url), {
       method: "POST",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -24,8 +37,7 @@ class Http {
   }
 
   async delete(url: string, body = {}) {
-    await this.getToken();
-    return await fetch(URLServer + url, {
+    return await fetch(this.getUrl(url), {
       method: "DELETE",
       headers: this.MyHeaders,
       body: JSON.stringify(body),
@@ -33,20 +45,11 @@ class Http {
   }
 
   async put(url: string) {
-    await this.getToken();
-    return await fetch(URLServer + url, {
+    return await fetch(this.getUrl(url), {
       method: "PUT",
       headers: this.MyHeaders,
       redirect: "follow",
     });
-  }
-
-  async getToken() {
-    this.MyHeaders.delete("Authorization");
-    this.MyHeaders.append(
-      "Authorization",
-      "Bearer " + (await storageService.get("token"))
-    );
   }
 }
 

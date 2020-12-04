@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
+import { usersService } from "store/UsersService";
+
 import { Wrapper } from "../Modal";
 import CreateDialogForm from "./CreateDialogForm";
 import UsersContainer from "./UsersContainer";
-
-import { usersService } from "store/UsersService";
-import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
 
 const CreateDialogBlock = styled.div`
   width: 400px;
@@ -24,18 +23,13 @@ const CreateDialog = () => {
     usersService.getUsers();
   }, []);
 
-  const closeModal = (e: any) => {
-    if (!e.target.classList.contains("modal")) return;
-    createDialogModalService.idUserAwaitingAddition = [];
-    createDialogModalService.close();
-  };
-
   return (
-    <Wrapper onClick={(e) => closeModal(e)} className="modal">
+    <Wrapper>
       <CreateDialogBlock>
         <CreateDialogForm />
         <UsersContainer />
       </CreateDialogBlock>
+      <div>x</div>
     </Wrapper>
   );
 };

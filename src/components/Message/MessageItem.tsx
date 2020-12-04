@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { format } from "timeago.js";
 
 import { authService } from "store/AuthService";
 import { generateColorAvatar } from "utils/generateAvatar";
+import { TypeMessageEnum } from "../../types/typeMessage";
 
-interface IPropsStyle {
+interface IsMeInterface {
   isMe?: boolean;
 }
 
-const MessageContainer = styled.div`
+interface AvatarInterface {
+  background: number[];
+}
+
+const MessageContainer = styled.div<IsMeInterface>`
   display: flex;
   align-items: center;
-  justify-content: ${({ isMe }: IPropsStyle) =>
-    isMe ? "flex-end" : "flex-start"};
+  justify-content: ${({ isMe }) => (isMe ? "flex-end" : "flex-start")};
   margin-bottom: 30px;
 `;
 const MessageColumn = styled.div`
@@ -22,30 +26,25 @@ const MessageColumn = styled.div`
   flex-direction: column;
 `;
 
-const MessageText = styled.div`
+const MessageText = styled.div<IsMeInterface>`
   max-width: 355px;
-  background: ${({ isMe }: IPropsStyle) => (isMe ? "#ffffff" : "#3674FF")};
+  background: ${({ isMe }) => (isMe ? "#ffffff" : "#3674FF")};
   box-shadow: 0px 5px 5px
-    rgba(
-      ${({ isMe }: IPropsStyle) => (isMe ? "0, 0, 0," : "54, 116, 255,")}
-        0.196733
-    );
+    rgba(${({ isMe }) => (isMe ? "0, 0, 0," : "54, 116, 255,")} 0.196733);
   font-size: 14px;
   line-height: 20px;
-  border-radius: 12px 12px
-    ${({ isMe }: IPropsStyle) => (isMe ? "0px 12px" : "12px 0px")}; // изменение углов
-  color: ${({ isMe }: IPropsStyle) => (isMe ? "#202020" : "#ffffff")};
+  border-radius: 12px 12px ${({ isMe }) => (isMe ? "0px 12px" : "12px 0px")}; // изменение углов
+  color: ${({ isMe }: IsMeInterface) => (isMe ? "#202020" : "#ffffff")};
   padding: 10px 15px 13px 19px;
   word-break: break-word;
 `;
 
-export const Avatar = styled.div`
+export const Avatar = styled.div<AvatarInterface>`
   height: 30px;
   width: 30px;
   border-radius: 50%;
   background: rgb(
-    ${({ background }: { background: number[] }) =>
-      `${background[0]},${background[1]},${background[2]}`}
+    ${({ background }) => `${background[0]},${background[1]},${background[2]}`}
   );
   display: flex;
   justify-content: center;
@@ -65,10 +64,10 @@ const MessageTimer = styled.div`
   margin-top: 10px;
 `;
 
-const MessageFlexEnd = styled.div`
+const MessageFlexEnd = styled.div<IsMeInterface>`
   display: flex;
   align-items: flex-end;
-  flex-direction: ${({ isMe }: IPropsStyle) => (isMe ? "row-reverse" : "row")};
+  flex-direction: ${({ isMe }) => (isMe ? "row-reverse" : "row")};
 `;
 
 const JoinedMessage = styled.div`
@@ -81,26 +80,28 @@ const JoinedMessage = styled.div`
   color: #999999;
 `;
 
-interface IProps {
+interface MessageItemInteface {
   id: string;
   text: string;
   date: Date;
   name: string;
-  type: 1 | 2;
+  type: TypeMessageEnum;
 }
 
-const MessageItem: React.FC<IProps> = ({ id, text, date, name, type }) => {
+const MessageItem = ({ id, text, date, name, type }: MessageItemInteface) => {
   const isMe = authService.id === id;
-  if (type === 2) {
+
+  if (type === TypeMessageEnum["JOIN_TO_DIALOG_MESSAGE"]) {
     return <JoinedMessage>{text}</JoinedMessage>;
   }
+  const colorAvatar = useCallback((id: string) => {
+    return generateColorAvatar(id);
+  }, []);
 
   return (
     <MessageContainer isMe={isMe}>
       <MessageFlexEnd isMe={isMe}>
-        <MessageAvatar background={generateColorAvatar(id)}>
-          {name[0]}
-        </MessageAvatar>
+        <MessageAvatar background={colorAvatar(id)}>{name[0]}</MessageAvatar>
         <MessageColumn>
           <MessageText isMe={isMe}>{text}</MessageText>
           <MessageTimer>{format(date)}</MessageTimer>

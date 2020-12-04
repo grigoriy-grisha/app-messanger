@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AuthContainer,
@@ -11,6 +11,7 @@ import {
 } from "../index";
 import { authService } from "store/AuthService";
 import { useValidateEmail } from "hooks/useValidateEmail";
+import { valueSetter } from "../../../utils/valueDecorator";
 
 const Login = () => {
   const [emailValue, setEmailValue] = useState("");
@@ -18,7 +19,7 @@ const Login = () => {
 
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = async (e: FormEvent) => {
+  const onSubmitData = async (e: FormEvent) => {
     e.preventDefault();
     if (!emailValue || !passwordValue) return;
 
@@ -29,13 +30,17 @@ const Login = () => {
     });
   };
 
+  const onSubmitRequest = useCallback((e: FormEvent) => {
+    onSubmitData(e);
+  }, []);
+
   return (
     <AuthWrap>
       <AuthContainer>
         <form onSubmit={onSubmitRequest}>
           <AuthInputValidate
             placeholder="Введите почту"
-            onChange={(e) => setEmailValue(e.target.value)}
+            onChange={valueSetter(setEmailValue)}
             value={emailValue}
             type="email"
             validate={validateEmail}
@@ -44,7 +49,7 @@ const Login = () => {
           <AuthInput
             placeholder="Пароль"
             type="password"
-            onChange={(e) => setPasswordValue(e.target.value)}
+            onChange={valueSetter(setEmailValue)}
             value={passwordValue}
           />
           <AuthSubmitButton>Войти в аккаунт</AuthSubmitButton>

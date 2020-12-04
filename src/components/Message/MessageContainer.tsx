@@ -1,17 +1,19 @@
 import MessageItem from "./MessageItem";
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
-import { toJS } from "mobx";
+import { observe } from "mobx";
 import styled from "styled-components";
 
 import { CenterElement, PreventiveMessage } from "App";
-import Loader from "../Loader";
+
 import { MessageInterface } from "types";
 
 import { messageService } from "store/MessagesService";
 import { dialogsService } from "store/DialogsService/DialogsService";
 import socket from "utils/socket";
+
+import Loader from "../Loader";
 
 const MessageWrap = styled.div`
   position: relative;
@@ -20,42 +22,50 @@ const MessageWrap = styled.div`
   overflow-y: scroll;
 `;
 
-const MessageContainer = () => {
-  const messageRef = useRef<HTMLDivElement>(null);
-  const params: { id: string } = useParams();
+interface ParamsInterface {
+  id: string;
+}
 
-  const addMessage = (message: MessageInterface) => {
+const MessageContainer = () => {
+  const [messageRef, setMessageRef] = useState<HTMLDivElement | null>(null);
+  const params = useParams<ParamsInterface>();
+
+  const addMessage = ({ message }: { message: MessageInterface }) => {
     messageService.messages.push(message);
   };
 
+  const getDialogInfoByParams = async () => {
+    const dialogInfo = await dialogsService.getDialogInfo(params.id);
+    if (dialogInfo.dialogWasCreated) {
+      dialogsService.dialogs.push(dialogInfo.dialog);
+    }
+  };
+
+  const getMessagesByParams = async () => {
+    await messageService.getMessagesById(params.id);
+    socket.emit("DIALOGS:JOIN", params.id);
+    dialogsService.changeCurrentId(params.id);
+  };
+
   useEffect(() => {
-    socket.addEventListener(
-      "SERVER:NEW_MESSAGE",
-      ({ message }: { message: MessageInterface }) => addMessage(message)
-    );
+    socket.addEventListener("SERVER:NEW_MESSAGE", addMessage);
     return () => {
-      socket.removeAllListeners();
+      socket.removeListener("SERVER:NEW_MESSAGE", addMessage);
     };
   }, []);
 
   useEffect(() => {
     if (!params.id) return;
-    messageService.isLoading = true;
-    dialogsService.getDialogInfo(params.id).then((res) => {
-      if (res.message) dialogsService.dialogs.push(res.dialog);
-
-      messageService.getMessagesById(params.id).then(() => {
-        socket.emit("DIALOGS:JOIN", params.id);
-        messageService.isLoading = false;
-        dialogsService.changeCurrentId(params.id);
-      });
-    });
+    getDialogInfoByParams();
+    getMessagesByParams();
   }, [params.id]);
 
-  useLayoutEffect(() => {
-    if (messageRef.current)
-      messageRef.current.scrollTop = messageRef.current.scrollHeight;
-  }, [toJS(messageService.messages)]);
+  useEffect(
+    observe(messageService.messages, () => {
+      if (messageRef) messageRef.scrollTop = messageRef.scrollHeight;
+    }),
+    []
+  );
 
   if (messageService.isLoading)
     return (
@@ -68,7 +78,7 @@ const MessageContainer = () => {
 
   if (messageService.messages.length === 0) {
     return (
-      <MessageWrap ref={messageRef}>
+      <MessageWrap>
         <CenterElement>
           {dialogsService.currentDialogId ? (
             <PreventiveMessage>Пока что нет сообщений!</PreventiveMessage>
@@ -81,19 +91,19 @@ const MessageContainer = () => {
   }
 
   return (
-    <MessageWrap ref={messageRef}>
-      {messageService.messages.map((item) => {
-        return (
+    <MessageWrap ref={setMessageRef}>
+      {messageService.messages.map(
+        ({ _id, author, text, createdAt, typeMessage }) => (
           <MessageItem
-            key={item._id}
-            id={item.author._id}
-            text={item.text}
-            date={item.createdAt}
-            name={item.author.fullname}
-            type={item.typeMessage}
+            key={_id}
+            id={author._id}
+            text={text}
+            date={createdAt}
+            name={author.fullname}
+            type={typeMessage}
           />
-        );
-      })}
+        )
+      )}
     </MessageWrap>
   );
 };

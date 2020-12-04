@@ -10,6 +10,7 @@ import { alertService } from "store/AlertService";
 import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
 import { dialogsService } from "store/DialogsService/DialogsService";
 import { changeModeService } from "store/DialogsService/ChangeModeService";
+import { valueSetter } from "../../../utils/valueDecorator";
 
 const Form = styled.form`
   padding: 30px;
@@ -58,22 +59,27 @@ const Label = styled.label`
 
 const CreateDialogForm = () => {
   const history = useHistory();
-  const [value, setValue] = useState("");
+  const [currentNameDialog, setCurrentNameDialog] = useState("");
   const [active, setActive] = useState(true);
+
+  const createDialog = async () => {
+    const dialog = await createDialogModalService.createDialog(
+      currentNameDialog,
+      active
+    );
+    socket.emit("DIALOGS:JOIN", dialog._id);
+    dialogsService.dialogs.push(dialog);
+    changeModeService.changeDialogsMode(false);
+    createDialogModalService.close();
+    history.push("/dialogs/" + dialog._id);
+  };
 
   const onCreateButtonClick = (e: FormEvent) => {
     e.preventDefault();
-    if (!value) return alertService.showAlert("Введите название чата!");
-    createDialogModalService
-      .createDialog(value, active)
-      .then((dialog: DialogInterface) => {
-        socket.emit("DIALOGS:JOIN", dialog._id);
-        dialogsService.dialogs.push(dialog);
-        changeModeService.changeDialogsMode(false);
-        createDialogModalService.idUserAwaitingAddition = [];
-        createDialogModalService.close();
-        history.push("/dialogs/" + dialog._id);
-      });
+    if (!currentNameDialog) {
+      return alertService.showAlert("Введите название чата!");
+    }
+    createDialog();
   };
 
   return (
@@ -82,8 +88,8 @@ const CreateDialogForm = () => {
         <Input
           type="text"
           placeholder="Введите название"
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
+          onChange={valueSetter(setCurrentNameDialog)}
+          value={currentNameDialog}
         />
         <Button onClick={onCreateButtonClick}>Создать</Button>
       </Form>

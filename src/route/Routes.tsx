@@ -1,12 +1,13 @@
-import { Redirect, Switch, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import React from "react";
 import { observer } from "mobx-react-lite";
-import Auth from "pages/auth";
-import Main from "pages/main/Main";
-import ChangePassword from "pages/auth/ChangePassword/ChangePassword";
-import Loader from "./Loader";
+import Auth from "modules/auth";
+import Main from "modules/main/Main";
+import ChangePassword from "modules/auth/ChangePassword/ChangePassword";
 import { CenterElement } from "App";
 import { authService } from "store/AuthService";
+
+import Loader from "../components/Loader";
 
 const Routes = () => {
   if (authService.loading) {
@@ -19,7 +20,7 @@ const Routes = () => {
 
   return (
     <div className="App">
-      {authService.getToken ? (
+      {authService.isAuth ? (
         <>
           <Switch>
             <Route path={["/dialogs/:id", "/dialogs"]}>

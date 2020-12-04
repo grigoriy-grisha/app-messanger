@@ -1,11 +1,13 @@
 import React, { FormEvent, useState } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import { ImgBlockPointer } from "../TopSide/TopSide";
-
 import { messageService } from "store/MessagesService";
+
 import { dialogsService } from "store/DialogsService/DialogsService";
 import send from "static/img/send.svg";
+
+import { ImgBlockPointer } from "../TopSide/TopSide";
+import { valueSetter } from "../../utils/valueDecorator";
 
 const ChatInputContainer = styled.div`
   width: 100%;
@@ -47,7 +49,7 @@ const ChatInput = () => {
             <Input
               type="text"
               placeholder="Введите сообщение..."
-              onChange={(e) => setValue(e.target.value)}
+              onChange={valueSetter(setValue)}
               value={value}
             />
             <ImgBlockPointer src={send} alt="send" onClick={sendMessage} />

@@ -1,5 +1,9 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+
+import { authService } from "store/AuthService";
+import { useValidatePassword } from "hooks/useValidatePassword";
+import { useValidateEmail } from "hooks/useValidateEmail";
 import {
   AuthContainer,
   AuthInput,
@@ -9,10 +13,9 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-import { authService } from "store/AuthService";
-import { useValidatePassword } from "hooks/useValidatePassword";
-import { useValidateEmail } from "hooks/useValidateEmail";
+
 import { alertService } from "../../../store/AlertService";
+import { valueSetter } from "../../../utils/valueDecorator";
 
 const Register = () => {
   const history = useHistory();
@@ -28,7 +31,7 @@ const Register = () => {
   );
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = (e: FormEvent<HTMLElement>) => {
+  const onSubmitData = (e: FormEvent) => {
     e.preventDefault();
     if (!emailValue || !passwordValue || !repeatPasswordValue || !name) {
       alertService.showAlert("Заполните все поля!");
@@ -51,13 +54,18 @@ const Register = () => {
         if (res) history.push("/auth/login");
       });
   };
+
+  const onSubmitRequest = useCallback((e: FormEvent) => {
+    onSubmitData(e);
+  }, []);
+
   return (
     <AuthWrap>
       <AuthContainer>
         <form onSubmit={onSubmitRequest}>
           <AuthInputValidate
             placeholder="Введите почту"
-            onChange={(e) => setEmailValue(e.target.value)}
+            onChange={valueSetter(setEmailValue)}
             value={emailValue}
             validate={validateEmail}
             type="email"
@@ -65,20 +73,20 @@ const Register = () => {
           {validateEmail && <ErrorText>Введите правильный email!</ErrorText>}
           <AuthInput
             placeholder="Введите имя"
-            onChange={(e) => setName(e.target.value)}
+            onChange={valueSetter(setName)}
             value={name}
           />
           <AuthInputValidate
             placeholder="Пароль"
             type="password"
-            onChange={(e) => setPasswordValue(e.target.value)}
+            onChange={valueSetter(setPasswordValue)}
             value={passwordValue}
             validate={validatePassword}
           />
           <AuthInputValidate
             placeholder="Повторите Пароль"
             type="password"
-            onChange={(e) => setRepeatPasswordValue(e.target.value)}
+            onChange={valueSetter(setRepeatPasswordValue)}
             value={repeatPasswordValue}
             validate={validatePassword}
           />

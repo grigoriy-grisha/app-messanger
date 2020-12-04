@@ -6,7 +6,7 @@ import { storageService } from "./StorageService";
 import { UserInterface } from "types";
 
 class UsersService {
-  users: Array<UserInterface> = [];
+  users: UserInterface[] = [];
   currentUserId: null | string = null;
 
   constructor() {
@@ -28,7 +28,7 @@ class UsersService {
     this.users = [];
   }
 
-  setUser(id: string) {
+  setCurrentUser(id: string) {
     this.currentUserId = id;
   }
 }

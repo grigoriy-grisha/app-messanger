@@ -1,14 +1,18 @@
 import { makeAutoObservable } from "mobx";
 import { catchAlerts } from "utils/catchAlerts";
 import { getAction, postAction } from "utils/fetchActions";
+
 import { DialogInterface } from "types";
+
+import { messageService } from "../MessagesService";
+import { DialogInfoInterface } from "../../types/DialogInfoTypes";
 
 class DialogsService {
   currentDialogId: string | null = null;
   dialogs: DialogInterface[] = [];
   currentDialog: DialogInterface | null = null;
   linkDialog: string | null = null;
-  isLoading: boolean = false;
+  isLoading = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -16,23 +20,33 @@ class DialogsService {
 
   @catchAlerts
   async getDialogs() {
+    dialogsService.isLoading = true;
     this.dialogs = await getAction("/dialog/get");
+    dialogsService.isLoading = false;
   }
 
   @catchAlerts
   async getAllDialogs() {
+    dialogsService.isLoading = true;
     const result = await getAction("/dialog/all");
+    dialogsService.isLoading = false;
     this.dialogs = result.dialogs;
   }
 
   @catchAlerts
-  async userAddInDialog(dialogId: object) {
-    return await postAction("/dialog/addUser", dialogId);
+  async userAddInDialog(): Promise<string> {
+    return await postAction("/dialog/addUser", {
+      dialog: dialogsService.currentDialogId!,
+    });
   }
 
   @catchAlerts
   async getDialogInfo(id: string) {
-    const result = await getAction("/dialog/getDialog/" + id);
+    messageService.isLoading = true;
+    const result: DialogInfoInterface = await getAction(
+      "/dialog/getDialog/" + id
+    );
+    messageService.isLoading = false;
     this.currentDialog = result.dialog;
     return result;
   }
@@ -42,9 +56,12 @@ class DialogsService {
   }
 
   clearDialogs() {
-    this.currentDialogId = null;
     this.dialogs = [];
     this.currentDialog = null;
+  }
+
+  setCurrentDialog(id: string) {
+    this.currentDialogId = id;
   }
 }
 

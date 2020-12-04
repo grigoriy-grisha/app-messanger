@@ -9,17 +9,18 @@ class CreateDialogModalService {
   constructor() {
     makeAutoObservable(this);
   }
+
   close = () => (this.isOpen = false);
+
   open = () => (this.isOpen = true);
+
   addAndRemoveIdUser(id: string) {
-    let clone = toJS(this.idUserAwaitingAddition);
-    const index = clone.findIndex((item) => id === item);
+    const index = this.idUserAwaitingAddition.findIndex((item) => id === item);
     if (index === -1) {
-      clone.push(id);
+      this.idUserAwaitingAddition.push(id);
     } else {
-      clone.splice(index, 1);
+      this.idUserAwaitingAddition.splice(index, 1);
     }
-    this.idUserAwaitingAddition = clone;
   }
 
   @catchAlerts

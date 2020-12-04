@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { ImgBlock } from "./TopSide";
+
 import { changeModeService } from "store/DialogsService/ChangeModeService";
-import message from "static/img/message.svg";
-import chat from "static/img/chat.svg";
+import messageIcon from "static/img/message.svg";
+import chatIcon from "static/img/chat.svg";
+
+import { ImgBlock } from "./TopSide";
 
 const ListsDialogsAndContactWrap = styled.div`
   border-bottom: 1px solid #dddddd;
@@ -36,21 +38,21 @@ const ListsDialogsAndContactContainer = () => {
   return (
     <ListsDialogsAndContactWrap>
       <ListType
-        isActive={true}
+        isActive
         onClick={() => {
-          changeModeService.changeDialogsMode(true);
+          changeModeService.toggleSearchDialogsMode(true);
         }}
       >
-        <ImgBlock src={message} alt="message" />
+        <ImgBlock src={messageIcon} alt="messageIcon" />
         Список Диалогов
       </ListType>
       <ListType
         isActive={false}
         onClick={() => {
-          changeModeService.changeDialogsMode(false);
+          changeModeService.toggleSearchDialogsMode(false);
         }}
       >
-        <ImgBlock src={chat} alt="chat" />
+        <ImgBlock src={chatIcon} alt="chatIcon" />
         Мои диалоги
       </ListType>
     </ListsDialogsAndContactWrap>

@@ -1,17 +1,16 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import { dialogsService } from "store/DialogsService/DialogsService";
 
 import {
   DialogSearchCountUsers,
   DialogSearchName,
-} from "../Dialogs/DialogItem";
+} from "../../modules/Dialogs/Item";
 import Modal from "../Modal/Modal";
 import { DialogInfoModal } from "../Modal/DialogInfo/DialogInfoModal";
 
-import { dialogInfoService } from "store/ModalService/DialogInfoService";
-import { dialogsService } from "store/DialogsService/DialogsService";
-import settings from "../../static/img/settings.svg";
+import settingsIcon from "../../static/img/settings.svg";
 
 const TopSideWrapper = styled.div`
   width: 100%;
@@ -48,9 +47,10 @@ const DialogInfo = styled.div`
 `;
 
 const TopSide = observer(() => {
+  if (!dialogsService.currentDialog) return null;
   return (
     <TopSideWrapper>
-      {dialogsService.currentDialog && (
+      {
         <DialogInfoContainer>
           <div />
           <DialogInfo>
@@ -62,17 +62,17 @@ const TopSide = observer(() => {
             </DialogSearchCountUsers>
           </DialogInfo>
           <ImgBlockPointer
-            src={settings}
-            alt="settings"
-            onClick={dialogInfoService.open}
+            src={settingsIcon}
+            alt="settingsIcon"
+            // onClick={dialogInfoService.open}
           />
-          {dialogInfoService.isOpen && (
-            <Modal>
-              <DialogInfoModal />
-            </Modal>
-          )}
+          {/*{dialogInfoService.isOpen && (*/}
+          {/*  <Modal>*/}
+          {/*    <DialogInfoModal />*/}
+          {/*  </Modal>*/}
+          {/*)}*/}
         </DialogInfoContainer>
-      )}
+      }
     </TopSideWrapper>
   );
 });

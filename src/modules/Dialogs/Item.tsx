@@ -3,12 +3,15 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { UserInterface } from "types";
 
-const DialogSearchContainer = styled.div`
+interface SearchContainerInterface {
+  selected: boolean;
+}
+
+const DialogSearchContainer = styled.div<SearchContainerInterface>`
   width: 100%;
   padding: 10px 35px;
   transition: 0.1s;
-  background: ${({ active }: { active: boolean }) =>
-    active ? "#f3f7ff" : "#ffffff"};
+  background: ${({ selected }) => (selected ? "#f3f7ff" : "#ffffff")};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,28 +46,28 @@ interface DialogItemInterface {
   name: string;
   users: UserInterface[];
   id: string;
+  img: string;
+  selected?: boolean;
   onDialogItemClick: (id: string) => void;
-  img: any;
-  active?: boolean;
 }
 
-const DialogItem = ({
+const Item = ({
   name,
   users,
   id,
-  onDialogItemClick,
   img,
-  active = false,
+  selected = false,
+  onDialogItemClick,
 }: DialogItemInterface) => {
   return (
     <DialogSearchContainer
-      active={active}
+      selected={selected}
       onClick={() => onDialogItemClick(id)}
     >
       <div>
         <DialogSearchName>{name}</DialogSearchName>
         <DialogSearchCountUsers>
-          {users.length} Участников
+          {users.length} участников
         </DialogSearchCountUsers>
       </div>
       <DialogSearchIcon>
@@ -73,4 +76,4 @@ const DialogItem = ({
     </DialogSearchContainer>
   );
 };
-export default React.memo(observer(DialogItem));
+export default React.memo(observer(Item));

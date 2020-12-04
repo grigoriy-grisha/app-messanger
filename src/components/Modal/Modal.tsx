@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
@@ -14,14 +14,14 @@ export const Wrapper = styled.div`
   align-items: center;
 `;
 const Modal = ({ children }: { children: JSX.Element }) => {
-  const el = document.createElement("div");
+  const [elem] = useState(document.createElement("div"));
   useEffect(() => {
-    document.body.appendChild(el);
+    document.body.appendChild(elem);
     return () => {
-      document.body.removeChild(el);
+      document.body.removeChild(elem);
     };
   }, []);
-  return ReactDOM.createPortal(children, el);
+  return ReactDOM.createPortal(children, elem);
 };
 
 export default Modal;

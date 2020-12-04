@@ -1,5 +1,11 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+
+import { authService } from "store/AuthService";
+import { alertService } from "store/AlertService";
+import { messageService } from "store/MessagesService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+
 import {
   AuthContainer,
   AuthInput,
@@ -7,27 +13,29 @@ import {
   AuthSubmitButton,
   AuthWrap,
 } from "../index";
-import { authService } from "store/AuthService";
-import { alertService } from "store/AlertService";
-import { messageService } from "store/MessagesService";
-import { dialogsService } from "store/DialogsService/DialogsService";
+import { valueSetter } from "../../../utils/valueDecorator";
 
 const ChangePassword = () => {
   const history = useHistory();
   const [passwordValue, setPasswordValue] = useState("");
 
-  const onChangePasswordSubmit = (e: FormEvent) => {
+  const logoutClick = async (e: FormEvent) => {
     e.preventDefault();
     if (!passwordValue) return;
 
-    authService.changePassword(passwordValue).then((mes: string) => {
-      alertService.showAlert(mes);
-      messageService.clearMessages();
-      dialogsService.clearDialogs();
-      authService.logoutAction();
-      history.push("/auth/login");
-    });
+    const message = await authService.changePassword(passwordValue);
+
+    alertService.showAlert(message);
+    messageService.clearMessages();
+    dialogsService.clearDialogs();
+    authService.logoutAction();
+    history.push("/auth/login");
   };
+
+  const onChangePasswordSubmit = useCallback(
+    (e: FormEvent) => logoutClick(e),
+    []
+  );
 
   return (
     <AuthWrap>
@@ -36,7 +44,7 @@ const ChangePassword = () => {
           <AuthInput
             placeholder="Пароль для изменения"
             type="password"
-            onChange={(e) => setPasswordValue(e.target.value)}
+            onChange={valueSetter(setPasswordValue)}
             value={passwordValue}
           />
           <AuthSubmitButton onClick={onChangePasswordSubmit}>

@@ -20,8 +20,8 @@ class AuthService {
     this.loading = false;
   }
 
-  get getToken() {
-    return this.token;
+  get isAuth() {
+    return !!this.token;
   }
 
   @catchAlerts
@@ -32,7 +32,7 @@ class AuthService {
   @catchAlerts
   async loginAction(body: object) {
     const result = await postAction("/user/signin", body);
-    await this.setUserFetchAction(result.token, result._id);
+    await this.setAuthDataAction(result.token, result._id);
     return result;
   }
 
@@ -42,7 +42,7 @@ class AuthService {
     return result.message;
   }
 
-  async setUserFetchAction(token: string, id: string) {
+  async setAuthDataAction(token: string, id: string) {
     await storageService.set("token", token);
     await storageService.set("id", id);
     this.token = token;
@@ -50,10 +50,10 @@ class AuthService {
   }
 
   logoutAction = async () => {
-    await this.removeUserAction();
+    await this.removeAuthDataAction();
   };
 
-  removeUserAction = async () => {
+  removeAuthDataAction = async () => {
     await storageService.delete("token");
     await storageService.delete("id");
     this.token = null;

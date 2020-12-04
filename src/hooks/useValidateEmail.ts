@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 export function useValidateEmail(emailValue: string) {
-  const [validateEmail, setValidateEmail] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
 
   useEffect(() => {
     const match = emailValue.match(/@/);
-    if (match) return setValidateEmail(false);
-    if (emailValue && !match) setValidateEmail(true);
+    if (match) setValidEmail(false);
+    if (emailValue && !match) setValidEmail(true);
   }, [emailValue]);
 
-  return validateEmail;
+  return validEmail;
 }

@@ -16,25 +16,23 @@ const Container = styled.div`
 `;
 
 const UsersContainer = () => {
-  const onUserItemClick = useCallback((id: string) => {
+  const onUserItemClick = (id: string) => {
     createDialogModalService.addAndRemoveIdUser(id);
-  }, []);
+  };
 
   return (
     <Container>
-      {usersService.users.map((item: UserInterface) => {
-        return (
-          <UserItem
-            key={item._id}
-            onUserItemClick={onUserItemClick}
-            fullname={item.fullname}
-            active={createDialogModalService.idUserAwaitingAddition.includes(
-              item._id
-            )}
-            id={item._id}
-          />
-        );
-      })}
+      {usersService.users.map((item: UserInterface) => (
+        <UserItem
+          key={item._id}
+          fullname={item.fullname}
+          active={createDialogModalService.idUserAwaitingAddition.includes(
+            item._id
+          )}
+          id={item._id}
+          onUserItemClick={onUserItemClick}
+        />
+      ))}
     </Container>
   );
 };

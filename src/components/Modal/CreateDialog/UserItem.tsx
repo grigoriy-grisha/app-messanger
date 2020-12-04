@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { Avatar } from "../../Message/MessageItem";
 import { generateColorAvatar } from "utils/generateAvatar";
@@ -28,18 +28,22 @@ const UserItemName = styled.div`
 interface PropsInterface {
   fullname: string;
   active: boolean;
-  onUserItemClick: (id: string) => void;
   id: string;
+  onUserItemClick: (id: string) => void;
 }
 
 const UserItem = ({
   fullname,
   active,
-  onUserItemClick,
   id,
+  onUserItemClick,
 }: PropsInterface) => {
+  const toggleUser = useCallback(() => {
+    onUserItemClick(id);
+  }, []);
+
   return (
-    <UserItemBLock onClick={() => onUserItemClick(id)} active={active}>
+    <UserItemBLock onClick={toggleUser} active={active}>
       <Avatar background={generateColorAvatar(id)}>{fullname[0]}</Avatar>
       <UserItemName>{fullname}</UserItemName>
     </UserItemBLock>

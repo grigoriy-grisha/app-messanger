@@ -17,7 +17,6 @@ const AlertContainer = styled.div`
 `;
 
 export const Alert = () => {
-  if (!alertService.message) return null;
   return <AlertContainer>{alertService.message}</AlertContainer>;
 };
 

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
-import { observer } from "mobx-react-lite";
+
 import { useHistory } from "react-router-dom";
 import { PreventiveMessage } from "App";
-import { Wrapper } from "../Modal";
-
-import { addDialogsModalService } from "store/ModalService/AddDialogsModalService";
 import { changeModeService } from "store/DialogsService/ChangeModeService";
+
 import { dialogsService } from "store/DialogsService/DialogsService";
+
+import Modal, { Wrapper } from "../Modal";
 
 const AddDialogBlock = styled.div`
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
@@ -48,39 +48,42 @@ const NoButton = styled(Button)`
   color: #666666;
 `;
 
-const AddDialog = observer(() => {
+interface AddDialogInterface {
+  toggleOpenModal: (state: boolean) => void;
+}
+
+const AddDialog = ({ toggleOpenModal }: AddDialogInterface) => {
   const history = useHistory();
 
-  const onAcceptButtonClick = () => {
-    dialogsService
-      .userAddInDialog({
-        dialog: addDialogsModalService.currentDialogId,
-      })
-      .then((res) => {
-        onCancelButtonCLick();
-        if (!res) return history.push("/dialogs/");
+  async function addUserInDialog() {
+    const dialogId = await dialogsService.userAddInDialog();
 
-        changeModeService.changeDialogsMode(false);
-        history.push("/dialogs/" + res);
-      });
-  };
+    toggleOpenModal(false);
+    if (!dialogId) return history.push("/dialogs/");
 
-  const onCancelButtonCLick = () => {
-    addDialogsModalService.close();
-    addDialogsModalService.removeDialogId();
-  };
+    changeModeService.changeDialogsMode(false);
+    history.push("/dialogs/" + dialogId);
+  }
+
+  const onAcceptButtonClick = useCallback(addUserInDialog, []);
+
+  const onCloseModalCLick = useCallback(() => {
+    toggleOpenModal(false);
+  }, []);
 
   return (
-    <Wrapper>
-      <AddDialogBlock>
-        <PreventiveMessage>Хотите Добавиться в чат?</PreventiveMessage>
-        <ButtonsBlock>
-          <YesButton onClick={onAcceptButtonClick}>Да</YesButton>
-          <NoButton onClick={onCancelButtonCLick}>Отмена</NoButton>
-        </ButtonsBlock>
-      </AddDialogBlock>
-    </Wrapper>
+    <Modal>
+      <Wrapper>
+        <AddDialogBlock>
+          <PreventiveMessage>Хотите Добавиться в чат?</PreventiveMessage>
+          <ButtonsBlock>
+            <YesButton onClick={onAcceptButtonClick}>Да</YesButton>
+            <NoButton onClick={onCloseModalCLick}>Отмена</NoButton>
+          </ButtonsBlock>
+        </AddDialogBlock>
+      </Wrapper>
+    </Modal>
   );
-});
+};
 
 export default AddDialog;

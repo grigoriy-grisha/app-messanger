@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import Routes from "components/Routes";
+import Routes from "route/Routes";
 import Alert from "components/Alert/Alert";
+import { alertService } from "./store/AlertService";
 
 export const CenterElement = styled.div`
   position: absolute;
@@ -19,7 +20,6 @@ export const PreventiveMessage = styled.h2`
 function App() {
   return (
     <>
-      <Alert />
       <Routes />
     </>
   );

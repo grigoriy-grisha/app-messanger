@@ -6,7 +6,7 @@ import { MessageInterface } from "../types";
 
 class MessagesService {
   messages: MessageInterface[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
   constructor() {
     makeAutoObservable(this);
   }
@@ -20,11 +20,9 @@ class MessagesService {
 
   @catchAlerts
   async sendMessage(message: string) {
-    const postData = { text: message };
-    return await postAction(
-      `/message/${dialogsService.currentDialogId}/add`,
-      postData
-    );
+    return await postAction(`/message/${dialogsService.currentDialogId}/add`, {
+      text: message,
+    });
   }
 
   clearMessages() {

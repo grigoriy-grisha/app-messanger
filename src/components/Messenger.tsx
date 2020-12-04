@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import Dialogs from "./Dialogs";
+import Dialogs from "../modules/Dialogs";
 import ChatInput from "./Message/ChatInput";
 import MessageContainer from "./Message/MessageContainer";
 import TopSide from "./TopSide/TopSide";
@@ -20,7 +20,7 @@ const MessengerWrapper = styled.div`
   display: flex;
 `;
 
-export const Messenger = () => {
+export const Messenger = React.memo(() => {
   return (
     <>
       <MessengerWrapper>
@@ -33,4 +33,4 @@ export const Messenger = () => {
       </MessengerWrapper>
     </>
   );
-};
+});

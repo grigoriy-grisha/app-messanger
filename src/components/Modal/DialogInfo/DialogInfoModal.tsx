@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Wrapper } from "../Modal";
 
-import { dialogInfoService } from "store/ModalService/DialogInfoService";
 import { dialogsService } from "store/DialogsService/DialogsService";
+
+import { Wrapper } from "../Modal";
 
 const DialogInfoBlock = styled.div`
   width: 560px;
@@ -22,21 +22,15 @@ const LinkBlock = styled.div`
 `;
 
 export const DialogInfoModal = () => {
-  const windowRef = useRef(null);
-
-  const closeModal = (e: any) => {
-    if (!e.target.classList.contains("modal")) return;
-    dialogInfoService.close();
-  };
-
   return (
-    <Wrapper ref={windowRef} onClick={(e) => closeModal(e)} className="modal">
+    <Wrapper>
       <DialogInfoBlock>
         <LinkBlock>
           Ссылка: {window.location.origin}/dialogs/
           {dialogsService.currentDialogId}
         </LinkBlock>
       </DialogInfoBlock>
+      <div>x</div>
     </Wrapper>
   );
 };

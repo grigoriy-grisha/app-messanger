@@ -1,10 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import CreateDialog from "./Modal/CreateDialog/CreateDialog";
-import Modal from "./Modal/Modal";
-import { ImgBlock } from "./TopSide/TopSide";
 
 import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
 import { authService } from "store/AuthService";
@@ -13,7 +10,11 @@ import { messageService } from "store/MessagesService";
 
 import createDialog from "static/img/createDialog.svg";
 import key from "static/img/key.svg";
-import logout from "static/img/logout.svg";
+import logoutIcon from "static/img/logout.svg";
+
+import CreateDialog from "./Modal/CreateDialog/CreateDialog";
+import Modal from "./Modal/Modal";
+import { ImgBlock } from "./TopSide/TopSide";
 
 const AsideBarContainer = styled.div`
   position: fixed;
@@ -54,28 +55,26 @@ const AsideItem = styled(ImgBlock)`
 const AsideBar = () => {
   const history = useHistory();
 
+  const logoutClick = useCallback(() => {
+    messageService.clearMessages();
+    dialogsService.clearDialogs();
+    authService.logoutAction();
+  }, []);
+
+  const changePasswordClick = useCallback(() => {
+    history.push("/changePassword");
+  }, []);
+
   return (
     <AsideBarContainer>
       <AsideBarBlock>
-        <AsideItem
-          src={logout}
-          alt="createDialog"
-          onClick={() => {
-            messageService.clearMessages();
-            dialogsService.clearDialogs();
-            authService.logoutAction();
-          }}
-        />
+        <AsideItem src={logoutIcon} alt="createDialog" onClick={logoutClick} />
         <AsideItem
           src={createDialog}
           alt="createDialog"
           onClick={createDialogModalService.open}
         />
-        <AsideItem
-          src={key}
-          alt="key"
-          onClick={() => history.push("/ChangePassword")}
-        />
+        <AsideItem src={key} alt="key" onClick={changePasswordClick} />
       </AsideBarBlock>
 
       {createDialogModalService.isOpen && (
@@ -87,4 +86,4 @@ const AsideBar = () => {
   );
 };
 
-export default observer(AsideBar);
+export default React.memo(observer(AsideBar));
