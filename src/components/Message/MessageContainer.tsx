@@ -27,15 +27,12 @@ const MessageContainer = () => {
   };
 
   useEffect(() => {
-    socket.on(
+    socket.addEventListener(
       "SERVER:NEW_MESSAGE",
       ({ message }: { message: MessageInterface }) => addMessage(message)
     );
     return () => {
-      socket.off(
-        "SERVER:NEW_MESSAGE",
-        ({ message }: { message: MessageInterface }) => addMessage(message)
-      );
+      socket.removeAllListeners();
     };
   }, []);
 

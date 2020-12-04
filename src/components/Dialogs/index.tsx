@@ -10,6 +10,7 @@ import { dialogsService } from "../../store/DialogsService/DialogsService";
 import socket from "../../utils/socket";
 import { useHistory } from "react-router-dom";
 import { messageService } from "../../store/MessagesService";
+import { usersService } from "../../store/UsersService";
 
 const DialogsContainerWrapper = styled.div`
   width: 29%;
@@ -24,9 +25,9 @@ export const DialogsWrapper = styled.div`
 `;
 
 const Dialogs = () => {
-  const addMessage = (message: MessageInterface) => {
-    messageService.messages.push(message);
-  };
+  useEffect(() => {
+    socket.emit("USER:JOIN", usersService.currentUserId);
+  }, []);
 
   return (
     <DialogsContainerWrapper>

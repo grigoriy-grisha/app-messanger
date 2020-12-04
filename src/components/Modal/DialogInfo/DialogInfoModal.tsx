@@ -5,7 +5,7 @@ import { dialogInfoService } from "../../../store/ModalService/DialogInfoService
 import { dialogsService } from "../../../store/DialogsService/DialogsService";
 
 const DialogInfoBlock = styled.div`
-  width: 400px;
+  width: 570px;
   height: 300px;
   padding: 20px;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
@@ -17,10 +17,11 @@ const DialogInfoBlock = styled.div`
 
 const LinkBlock = styled.div`
   padding: 20px;
+  color: #999999;
 `;
 
 export const DialogInfoModal = () => {
-  const linkRef = useRef(null);
+  const windowRef = useRef(null);
 
   const closeModal = (e: any) => {
     if (!e.target.classList.contains("modal")) return;
@@ -28,7 +29,7 @@ export const DialogInfoModal = () => {
   };
 
   return (
-    <Wrapper ref={linkRef} onClick={(e) => closeModal(e)} className="modal">
+    <Wrapper ref={windowRef} onClick={(e) => closeModal(e)} className="modal">
       <DialogInfoBlock>
         <LinkBlock>
           Ссылка: {window.location.origin}/dialogs/

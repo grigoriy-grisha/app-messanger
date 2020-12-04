@@ -12,6 +12,9 @@ import socket from "../../utils/socket";
 
 export const DialogsAddedContainer = () => {
   const history = useHistory();
+  const addDialog = (dialog: DialogInterface) => {
+    dialogsService.dialogs.push(dialog);
+  };
 
   useEffect(() => {
     dialogsService.isLoading = true;
@@ -22,6 +25,10 @@ export const DialogsAddedContainer = () => {
 
   const onDialogItemClick = useCallback((id: string) => {
     socket.emit("DIALOGS:JOIN", id);
+    socket.addEventListener("SERVER:NEW_DIALOG", (dialog: DialogInterface) => {
+      console.log(dialog);
+      addDialog(dialog);
+    });
     history.push(`/dialogs/${id}`);
     dialogsService.currentDialogId = id;
   }, []);

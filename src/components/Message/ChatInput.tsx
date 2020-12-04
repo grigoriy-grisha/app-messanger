@@ -35,7 +35,6 @@ const ChatInput = () => {
   const sendMessage = (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
     if (!value) return;
-    console.log(value);
     messageService.sendMessage(value).then(() => setValue(""));
   };
 

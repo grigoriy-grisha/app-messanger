@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Login from "./login/Login";
 import { Register } from "./register/Register";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
+import { authService } from "../../store/AuthService";
 
 export const AuthWrap = styled.div`
   position: absolute;
@@ -88,7 +89,7 @@ const Auth = () => {
       <Route path="/auth/register" exact>
         <Register />
       </Route>
-      {/*<Redirect from="/" to="/auth/register" />*/}
+      <Redirect to="/auth/register" />
     </Switch>
   );
 };

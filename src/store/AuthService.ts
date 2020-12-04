@@ -4,19 +4,23 @@ import { storageService } from "./StorageService";
 import { postAction } from "../utils/fetchActions";
 
 class AuthService {
-  isAuth: boolean = false;
   token: string | null = null;
   id: string | null = null;
-
+  loading = false;
   constructor() {
     makeAutoObservable(this);
     this.init();
   }
 
   async init() {
+    this.loading = true;
     this.token = await storageService.get("token");
-    this.isAuth = !!this.token;
     this.id = await storageService.get("id");
+    this.loading = false;
+  }
+
+  get getToken() {
+    return this.token;
   }
 
   @catchAlerts
@@ -42,7 +46,6 @@ class AuthService {
     await storageService.set("id", id);
     this.token = token;
     this.id = id;
-    this.isAuth = true;
   }
 
   logoutAction = async () => {
@@ -54,7 +57,6 @@ class AuthService {
     await storageService.delete("id");
     this.token = null;
     this.id = null;
-    this.isAuth = false;
   };
 }
 
