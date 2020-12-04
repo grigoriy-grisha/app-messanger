@@ -1,9 +1,7 @@
 import React from "react";
-import Routes from "./components/Routes";
-import Alert from "./components/Alert/Alert";
 import styled from "styled-components";
-import { Modal } from "./components/Modal/Modal";
-import { AddDialog } from "./components/Modal/AddDialog/AddDialog";
+import Routes from "components/Routes";
+import Alert from "components/Alert/Alert";
 
 export const CenterElement = styled.div`
   position: absolute;
@@ -23,9 +21,6 @@ function App() {
     <>
       <Alert />
       <Routes />
-      <Modal>
-        <AddDialog />
-      </Modal>
     </>
   );
 }

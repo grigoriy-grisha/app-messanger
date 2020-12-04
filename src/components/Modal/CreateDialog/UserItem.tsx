@@ -1,7 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import { Avatar } from "../../Message/MessageItem";
-import React from "react";
-import { generateColorAvatar } from "../../../utils/generateAvatar";
+import { generateColorAvatar } from "utils/generateAvatar";
 
 interface UserItemProps {
   active: boolean;

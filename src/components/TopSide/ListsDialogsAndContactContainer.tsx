@@ -1,10 +1,9 @@
-import { ImgBlock } from "./TopSide";
-import message from "../../static/img/message.svg";
-import chat from "../../static/img/chat.svg";
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
-import { changeModeService } from "../../store/DialogsService/ChangeModeService";
+import { ImgBlock } from "./TopSide";
+import { changeModeService } from "store/DialogsService/ChangeModeService";
+import message from "static/img/message.svg";
+import chat from "static/img/chat.svg";
 
 const ListsDialogsAndContactWrap = styled.div`
   border-bottom: 1px solid #dddddd;
@@ -33,7 +32,7 @@ const ListType = styled.div<ListTypeInterface>`
   }
 `;
 
-export const ListsDialogsAndContactContainer = () => {
+const ListsDialogsAndContactContainer = () => {
   return (
     <ListsDialogsAndContactWrap>
       <ListType
@@ -57,3 +56,5 @@ export const ListsDialogsAndContactContainer = () => {
     </ListsDialogsAndContactWrap>
   );
 };
+
+export default ListsDialogsAndContactContainer;

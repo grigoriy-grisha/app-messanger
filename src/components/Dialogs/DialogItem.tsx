@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import React from "react";
-import { DialogInterface, UserInterface } from "../../types";
 import { observer } from "mobx-react-lite";
-import socket from "../../utils/socket";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
+import { UserInterface } from "types";
 
 const DialogSearchContainer = styled.div`
   width: 100%;

@@ -1,7 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import React from "react";
-import { alertService } from "../../store/AlertService";
+import { alertService } from "store/AlertService";
 
 const AlertContainer = styled.div`
   position: absolute;

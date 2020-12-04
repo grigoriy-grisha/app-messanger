@@ -1,25 +1,25 @@
+import React, { FormEvent, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import {
   AuthContainer,
   AuthInput,
   AuthLink,
   AuthSubmitButton,
   AuthWrap,
-  ErrorText,
 } from "../index";
-import React, { FormEvent, useState } from "react";
-import { authService } from "../../../store/AuthService";
-import { alertService } from "../../../store/AlertService";
-import { Link, useHistory } from "react-router-dom";
-import { messageService } from "../../../store/MessagesService";
-import { dialogsService } from "../../../store/DialogsService/DialogsService";
+import { authService } from "store/AuthService";
+import { alertService } from "store/AlertService";
+import { messageService } from "store/MessagesService";
+import { dialogsService } from "store/DialogsService/DialogsService";
 
-export const ChangePassword = () => {
+const ChangePassword = () => {
   const history = useHistory();
   const [passwordValue, setPasswordValue] = useState("");
 
   const onChangePasswordSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!passwordValue) return;
+
     authService.changePassword(passwordValue).then((mes: string) => {
       alertService.showAlert(mes);
       messageService.clearMessages();
@@ -50,3 +50,5 @@ export const ChangePassword = () => {
     </AuthWrap>
   );
 };
+
+export default ChangePassword;

@@ -1,12 +1,14 @@
-import { makeAutoObservable, toJS } from "mobx";
-import { getAction } from "../utils/fetchActions";
-import { catchAlerts } from "../utils/catchAlerts";
-import { UserInterface } from "../types";
+import { makeAutoObservable } from "mobx";
+import { getAction } from "utils/fetchActions";
+import { catchAlerts } from "utils/catchAlerts";
+
 import { storageService } from "./StorageService";
+import { UserInterface } from "types";
 
 class UsersService {
   users: Array<UserInterface> = [];
   currentUserId: null | string = null;
+
   constructor() {
     makeAutoObservable(this);
     this.init();

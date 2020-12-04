@@ -13,8 +13,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-export const Modal = ({ children }: { children: JSX.Element }) => {
+const Modal = ({ children }: { children: JSX.Element }) => {
   const el = document.createElement("div");
   useEffect(() => {
     document.body.appendChild(el);
@@ -24,3 +23,5 @@ export const Modal = ({ children }: { children: JSX.Element }) => {
   }, []);
   return ReactDOM.createPortal(children, el);
 };
+
+export default Modal;

@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import { usersService } from "../../../store/UsersService";
-import { createDialogModalService } from "../../../store/ModalService/CreateDialogModalService";
+
+import { Wrapper } from "../Modal";
 import CreateDialogForm from "./CreateDialogForm";
 import UsersContainer from "./UsersContainer";
-import { Wrapper } from "../Modal";
+
+import { usersService } from "store/UsersService";
+import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
 
 const CreateDialogBlock = styled.div`
   width: 400px;

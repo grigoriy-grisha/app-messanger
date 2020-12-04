@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { PreventiveMessage } from "../../../App";
 import { observer } from "mobx-react-lite";
-import { addDialogsModalService } from "../../../store/ModalService/AddDialogsModalService";
-import { dialogsService } from "../../../store/DialogsService/DialogsService";
 import { useHistory } from "react-router-dom";
-import { changeModeService } from "../../../store/DialogsService/ChangeModeService";
+import { PreventiveMessage } from "App";
 import { Wrapper } from "../Modal";
+
+import { addDialogsModalService } from "store/ModalService/AddDialogsModalService";
+import { changeModeService } from "store/DialogsService/ChangeModeService";
+import { dialogsService } from "store/DialogsService/DialogsService";
 
 const AddDialogBlock = styled.div`
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
@@ -47,10 +48,8 @@ const NoButton = styled(Button)`
   color: #666666;
 `;
 
-export const AddDialog = observer(() => {
+const AddDialog = observer(() => {
   const history = useHistory();
-
-  if (!addDialogsModalService.isOpen) return null;
 
   const onAcceptButtonClick = () => {
     dialogsService
@@ -60,6 +59,7 @@ export const AddDialog = observer(() => {
       .then((res) => {
         onCancelButtonCLick();
         if (!res) return history.push("/dialogs/");
+
         changeModeService.changeDialogsMode(false);
         history.push("/dialogs/" + res);
       });
@@ -82,3 +82,5 @@ export const AddDialog = observer(() => {
     </Wrapper>
   );
 });
+
+export default AddDialog;

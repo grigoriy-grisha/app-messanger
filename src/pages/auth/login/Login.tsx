@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   AuthContainer,
   AuthInput,
@@ -8,10 +9,8 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-import { Link, useHistory } from "react-router-dom";
-import { useValidateEmail } from "../../../hooks/useValidateEmail";
-import { authService } from "../../../store/AuthService";
-import { usersService } from "../../../store/UsersService";
+import { authService } from "store/AuthService";
+import { useValidateEmail } from "hooks/useValidateEmail";
 
 const Login = () => {
   const [emailValue, setEmailValue] = useState("");
@@ -21,8 +20,8 @@ const Login = () => {
 
   const onSubmitRequest = async (e: FormEvent) => {
     e.preventDefault();
-    if (!emailValue && !passwordValue) return;
-    setEmailValue("");
+    if (!emailValue || !passwordValue) return;
+
     setPasswordValue("");
     await authService.loginAction({
       email: emailValue,

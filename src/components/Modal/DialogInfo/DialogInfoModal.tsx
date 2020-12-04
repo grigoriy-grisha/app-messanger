@@ -1,12 +1,13 @@
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Wrapper } from "../Modal";
-import React, { useEffect, useRef } from "react";
-import { dialogInfoService } from "../../../store/ModalService/DialogInfoService";
-import { dialogsService } from "../../../store/DialogsService/DialogsService";
+
+import { dialogInfoService } from "store/ModalService/DialogInfoService";
+import { dialogsService } from "store/DialogsService/DialogsService";
 
 const DialogInfoBlock = styled.div`
-  width: 570px;
-  height: 300px;
+  width: 560px;
+  height: 100px;
   padding: 20px;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.04204);
   background: #fff;

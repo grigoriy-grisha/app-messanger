@@ -1,10 +1,11 @@
 import React, { FormEvent, useState } from "react";
-import send from "../../static/img/send.svg";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { ImgBlockPointer } from "../TopSide/TopSide";
-import { messageService } from "../../store/MessagesService";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
+
+import { messageService } from "store/MessagesService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+import send from "static/img/send.svg";
 
 const ChatInputContainer = styled.div`
   width: 100%;

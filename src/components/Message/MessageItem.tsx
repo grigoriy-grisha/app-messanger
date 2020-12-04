@@ -1,9 +1,10 @@
-import styled from "styled-components";
 import React from "react";
-import { format } from "timeago.js";
-import { authService } from "../../store/AuthService";
 import { observer } from "mobx-react-lite";
-import { generateColorAvatar } from "../../utils/generateAvatar";
+import styled from "styled-components";
+import { format } from "timeago.js";
+
+import { authService } from "store/AuthService";
+import { generateColorAvatar } from "utils/generateAvatar";
 
 interface IPropsStyle {
   isMe?: boolean;

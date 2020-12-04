@@ -1,6 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
-import { postAction } from "../../utils/fetchActions";
-import { catchAlerts } from "../../utils/catchAlerts";
+import { postAction } from "utils/fetchActions";
+import { catchAlerts } from "utils/catchAlerts";
 
 class CreateDialogModalService {
   isOpen: boolean = false;

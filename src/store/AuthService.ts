@@ -1,12 +1,13 @@
 import { makeAutoObservable } from "mobx";
-import { catchAlerts } from "../utils/catchAlerts";
 import { storageService } from "./StorageService";
-import { postAction } from "../utils/fetchActions";
+import { catchAlerts } from "utils/catchAlerts";
+import { postAction } from "utils/fetchActions";
 
 class AuthService {
   token: string | null = null;
   id: string | null = null;
   loading = false;
+
   constructor() {
     makeAutoObservable(this);
     this.init();
@@ -37,7 +38,7 @@ class AuthService {
 
   @catchAlerts
   async changePassword(password: string) {
-    const result = await postAction("/user/changePassword", { password });
+    const result = await postAction("/user/ChangePassword", { password });
     return result.message;
   }
 

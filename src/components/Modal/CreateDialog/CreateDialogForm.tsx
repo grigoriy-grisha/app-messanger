@@ -1,13 +1,15 @@
-import { observer } from "mobx-react-lite";
 import React, { FormEvent, useState } from "react";
-import styled from "styled-components";
-import { alertService } from "../../../store/AlertService";
-import { createDialogModalService } from "../../../store/ModalService/CreateDialogModalService";
-import { DialogInterface } from "../../../types";
-import socket from "../../../utils/socket";
-import { dialogsService } from "../../../store/DialogsService/DialogsService";
+import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
-import { changeModeService } from "../../../store/DialogsService/ChangeModeService";
+import styled from "styled-components";
+
+import { DialogInterface } from "types";
+import socket from "utils/socket";
+
+import { alertService } from "store/AlertService";
+import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+import { changeModeService } from "store/DialogsService/ChangeModeService";
 
 const Form = styled.form`
   padding: 30px;
@@ -65,11 +67,11 @@ const CreateDialogForm = () => {
     createDialogModalService
       .createDialog(value, active)
       .then((dialog: DialogInterface) => {
+        socket.emit("DIALOGS:JOIN", dialog._id);
         dialogsService.dialogs.push(dialog);
+        changeModeService.changeDialogsMode(false);
         createDialogModalService.idUserAwaitingAddition = [];
         createDialogModalService.close();
-        changeModeService.changeDialogsMode(false);
-        socket.emit("DIALOGS:JOIN", dialog._id);
         history.push("/dialogs/" + dialog._id);
       });
   };

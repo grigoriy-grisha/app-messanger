@@ -1,10 +1,12 @@
-import { observer } from "mobx-react-lite";
-import { usersService } from "../../../store/UsersService";
-import UserItem from "./UserItem";
-import { createDialogModalService } from "../../../store/ModalService/CreateDialogModalService";
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { UserInterface } from "../../../types";
+import { observer } from "mobx-react-lite";
+
+import UserItem from "./UserItem";
+import { UserInterface } from "types";
+
+import { usersService } from "store/UsersService";
+import { createDialogModalService } from "store/ModalService/CreateDialogModalService";
 
 const Container = styled.div`
   width: 100%;

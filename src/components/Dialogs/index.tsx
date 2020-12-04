@@ -1,16 +1,14 @@
-import { ListsDialogsAndContactContainer } from "../TopSide/ListsDialogsAndContactContainer";
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import { observer } from "mobx-react-lite";
+
+import ListsDialogsAndContactContainer from "../TopSide/ListsDialogsAndContactContainer";
 import DialogsAddedContainer from "./DialogsAddedContainer";
 import DialogsSearchContainer from "./DialogsSearchContainer";
-import { observer } from "mobx-react-lite";
-import { changeModeService } from "../../store/DialogsService/ChangeModeService";
-import { DialogInterface, MessageInterface } from "../../types";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
-import socket from "../../utils/socket";
-import { useHistory } from "react-router-dom";
-import { messageService } from "../../store/MessagesService";
-import { usersService } from "../../store/UsersService";
+
+import { changeModeService } from "store/DialogsService/ChangeModeService";
+import { usersService } from "store/UsersService";
+import socket from "utils/socket";
 
 const DialogsContainerWrapper = styled.div`
   width: 29%;
@@ -25,10 +23,6 @@ export const DialogsWrapper = styled.div`
 `;
 
 const Dialogs = () => {
-  useEffect(() => {
-    socket.emit("USER:JOIN", usersService.currentUserId);
-  }, []);
-
   return (
     <DialogsContainerWrapper>
       <ListsDialogsAndContactContainer />

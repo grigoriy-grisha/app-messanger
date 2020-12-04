@@ -1,15 +1,17 @@
 import React from "react";
-import settings from "../../static/img/settings.svg";
+import { observer } from "mobx-react-lite";
+import styled from "styled-components";
+
 import {
   DialogSearchCountUsers,
   DialogSearchName,
 } from "../Dialogs/DialogItem";
-import styled from "styled-components";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
-import { observer } from "mobx-react-lite";
-import { Modal } from "../Modal/Modal";
-import { dialogInfoService } from "../../store/ModalService/DialogInfoService";
+import Modal from "../Modal/Modal";
 import { DialogInfoModal } from "../Modal/DialogInfo/DialogInfoModal";
+
+import { dialogInfoService } from "store/ModalService/DialogInfoService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+import settings from "../../static/img/settings.svg";
 
 const TopSideWrapper = styled.div`
   width: 100%;
@@ -45,7 +47,7 @@ const DialogInfo = styled.div`
   flex-direction: column;
 `;
 
-export const TopSide = observer(() => {
+const TopSide = observer(() => {
   return (
     <TopSideWrapper>
       {dialogsService.currentDialog && (
@@ -74,3 +76,5 @@ export const TopSide = observer(() => {
     </TopSideWrapper>
   );
 });
+
+export default TopSide;

@@ -11,7 +11,7 @@ const rotate = keyframes`
   }
 `;
 
-export const Loader = styled.div`
+const Loader = styled.div`
   width: 80px;
   height: 80px;
 
@@ -28,3 +28,4 @@ export const Loader = styled.div`
   }
   
 }`;
+export default Loader;

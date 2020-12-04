@@ -1,9 +1,8 @@
 import React from "react";
-import { Messenger } from "../../components/Messenger";
-import AsideBar from "../../components/AsideBar";
-import { Loader } from "../../components/Loader";
+import { Messenger } from "components/Messenger";
+import AsideBar from "components/AsideBar";
 
-export const Main = () => {
+const Main = () => {
   return (
     <div>
       <AsideBar />
@@ -11,3 +10,5 @@ export const Main = () => {
     </div>
   );
 };
+
+export default Main;

@@ -1,9 +1,10 @@
 import React from "react";
+import styled from "styled-components";
+
 import Dialogs from "./Dialogs";
 import ChatInput from "./Message/ChatInput";
 import MessageContainer from "./Message/MessageContainer";
-import styled from "styled-components";
-import { TopSide } from "./TopSide/TopSide";
+import TopSide from "./TopSide/TopSide";
 
 const MessagesContainerWrapper = styled.div`
   width: 71%;

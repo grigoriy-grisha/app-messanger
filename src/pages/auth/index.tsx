@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import Login from "./login/Login";
-import { Register } from "./register/Register";
-import styled from "styled-components";
+import React from "react";
 import { observer } from "mobx-react-lite";
-import { authService } from "../../store/AuthService";
+import { Redirect, Route, Switch } from "react-router-dom";
+import styled from "styled-components";
+import Login from "./login/Login";
+import Register from "./register/Register";
 
 export const AuthWrap = styled.div`
   position: absolute;
@@ -83,10 +82,10 @@ export const ErrorText = styled.span`
 const Auth = () => {
   return (
     <Switch>
-      <Route path="/auth/login" exact>
+      <Route path="/auth/login">
         <Login />
       </Route>
-      <Route path="/auth/register" exact>
+      <Route path="/auth/register">
         <Register />
       </Route>
       <Redirect to="/auth/register" />

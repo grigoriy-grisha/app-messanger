@@ -1,15 +1,17 @@
 import MessageItem from "./MessageItem";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import socket from "../../utils/socket";
-import { messageService } from "../../store/MessagesService";
-import { CenterElement, PreventiveMessage } from "../../App";
-import { dialogsService } from "../../store/DialogsService/DialogsService";
 import { toJS } from "mobx";
-import { Loader } from "../Loader";
-import { MessageInterface } from "../../types";
+import styled from "styled-components";
+
+import { CenterElement, PreventiveMessage } from "App";
+import Loader from "../Loader";
+import { MessageInterface } from "types";
+
+import { messageService } from "store/MessagesService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+import socket from "utils/socket";
 
 const MessageWrap = styled.div`
   position: relative;
@@ -39,7 +41,9 @@ const MessageContainer = () => {
   useEffect(() => {
     if (!params.id) return;
     messageService.isLoading = true;
-    dialogsService.getDialogInfo(params.id).then(() => {
+    dialogsService.getDialogInfo(params.id).then((res) => {
+      if (res.message) dialogsService.dialogs.push(res.dialog);
+
       messageService.getMessagesById(params.id).then(() => {
         socket.emit("DIALOGS:JOIN", params.id);
         messageService.isLoading = false;
@@ -48,7 +52,7 @@ const MessageContainer = () => {
     });
   }, [params.id]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (messageRef.current)
       messageRef.current.scrollTop = messageRef.current.scrollHeight;
   }, [toJS(messageService.messages)]);

@@ -2,7 +2,6 @@ import { makeAutoObservable } from "mobx";
 
 class AlertService {
   message: string = "";
-  isLoading: boolean = false;
   constructor() {
     makeAutoObservable(this);
   }

@@ -1,4 +1,5 @@
 import React, { FormEvent, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import {
   AuthContainer,
   AuthInput,
@@ -8,12 +9,12 @@ import {
   AuthWrap,
   ErrorText,
 } from "../index";
-import { authService } from "../../../store/AuthService";
-import { Link, useHistory } from "react-router-dom";
-import { useValidatePassword } from "../../../hooks/useValidatePassword";
-import { useValidateEmail } from "../../../hooks/useValidateEmail";
+import { authService } from "store/AuthService";
+import { useValidatePassword } from "hooks/useValidatePassword";
+import { useValidateEmail } from "hooks/useValidateEmail";
+import { alertService } from "../../../store/AlertService";
 
-export const Register = () => {
+const Register = () => {
   const history = useHistory();
 
   const [name, setName] = useState("");
@@ -27,20 +28,26 @@ export const Register = () => {
   );
   const validateEmail = useValidateEmail(emailValue);
 
-  const onSubmitRequest = async (e: FormEvent<HTMLElement>) => {
+  const onSubmitRequest = (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
-    if (!emailValue && !repeatPasswordValue && !name) return;
-    setName("");
-    setEmailValue("");
-    setPasswordValue("");
-    setRepeatPasswordValue("");
-    await authService
+    if (!emailValue || !passwordValue || !repeatPasswordValue || !name) {
+      alertService.showAlert("Заполните все поля!");
+      return;
+    }
+    if (passwordValue !== repeatPasswordValue) return;
+
+    authService
       .registerAction({
         email: emailValue,
         password: repeatPasswordValue,
         fullname: name,
       })
       .then((res) => {
+        setName("");
+        setEmailValue("");
+        setPasswordValue("");
+        setRepeatPasswordValue("");
+
         if (res) history.push("/auth/login");
       });
   };
@@ -87,3 +94,5 @@ export const Register = () => {
     </AuthWrap>
   );
 };
+
+export default Register;
