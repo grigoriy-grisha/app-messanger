@@ -45,5 +45,8 @@
     "@types/styled-components": "^5.1.4",
     "prettier": "^2.2.0",
     "typescript": "^3.9.2"
+  },
+  "eslintConfig": {
+    "extends": ["react-app"]
   }
 }

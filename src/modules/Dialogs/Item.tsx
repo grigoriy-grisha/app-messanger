@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { UserInterface } from "types";
 
@@ -59,11 +59,12 @@ const Item = ({
   selected = false,
   onDialogItemClick,
 }: DialogItemInterface) => {
+  const onItemCLick = useCallback(() => {
+    onDialogItemClick(id);
+  }, [id, onDialogItemClick]);
+
   return (
-    <DialogSearchContainer
-      selected={selected}
-      onClick={() => onDialogItemClick(id)}
-    >
+    <DialogSearchContainer selected={selected} onClick={onItemCLick}>
       <div>
         <DialogSearchName>{name}</DialogSearchName>
         <DialogSearchCountUsers>

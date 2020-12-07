@@ -1,29 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 
-import { CenterElement } from "App";
+import Loader from "components/Loader";
 
 import { dialogsService } from "store/DialogsService/DialogsService";
 import message from "static/img/message.svg";
 
 import { DialogsWrapper } from "./index";
 import DialogItem from "./Item";
-import AddDialog from "../../components/Modal/AddDialog/AddDialog";
-import Loader from "../../components/Loader";
+import AddToDialog from "../AddToDialog/AddToDialog";
+import { CenterElement } from "../../components/StyleComponents/GlobalStyleComponents";
 
 const SearchContainer = () => {
-  const [openUp, setOpenUp] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [selectedDialogId, setSelectedDialogId] = useState<string | null>(null);
+  const onCloseModal = useCallback(() => {
+    setSelectedDialogId(null);
+    setOpened(false);
+  }, []);
 
-  const toggleOpenModal = useCallback((state = false) => {
-    setOpenUp(state);
+  const onOpenModal = useCallback((id: string) => {
+    setSelectedDialogId(id);
+    setOpened(true);
   }, []);
 
   useEffect(() => {
     dialogsService.getAllDialogs();
-  }, []);
-
-  const onDialogItemClick = useCallback(() => {
-    toggleOpenModal(true);
   }, []);
 
   if (dialogsService.isLoading)
@@ -38,18 +40,23 @@ const SearchContainer = () => {
   return (
     <>
       <DialogsWrapper>
-        {dialogsService.dialogs.map((dialog) => (
+        {dialogsService.currentDialogs.map((dialog) => (
           <DialogItem
             key={dialog._id}
             id={dialog._id}
             name={dialog.name}
             users={dialog.users}
             img={message}
-            onDialogItemClick={onDialogItemClick}
+            onDialogItemClick={onOpenModal}
           />
         ))}
       </DialogsWrapper>
-      {openUp && <AddDialog toggleOpenModal={toggleOpenModal} />}
+      {opened && (
+        <AddToDialog
+          selectedDialogId={selectedDialogId}
+          onCloseModal={onCloseModal}
+        />
+      )}
     </>
   );
 };

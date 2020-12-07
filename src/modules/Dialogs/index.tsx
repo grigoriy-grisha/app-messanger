@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
 
-import ListsDialogsAndContactContainer from "../../components/TopSide/ListsDialogsAndContactContainer";
+import { changeModeService } from "store/DialogsService/ChangeModeService";
+import { dialogsService } from "store/DialogsService/DialogsService";
+
+import ListsDialogsAndContactContainer from "../TopSide/ListsDialogsAndContactContainer";
 import DialogsAddedContainer from "./AddedContainer";
 import DialogsSearchContainer from "./SearchContainer";
 
-import { changeModeService } from "store/DialogsService/ChangeModeService";
+import { SearchDialogsModeEnum } from "types/SearchDialogsModeType";
 
 const DialogsContainerWrapper = styled.div`
   width: 29%;
@@ -21,11 +25,28 @@ export const DialogsWrapper = styled.div`
 `;
 
 const Dialogs = () => {
+  const params = useParams<{ id: string }>();
+
+  const getDialogInfoByParams = useCallback(
+    async function () {
+      const dialogInfo = await dialogsService.getDialogInfo(params.id);
+      if (dialogInfo.dialogWasCreated === "DIALOG_WAS_CREATE") {
+        dialogsService.pushDialogToCurrentDialogs(dialogInfo.dialog);
+      }
+    },
+    [params.id]
+  );
+
+  useEffect(() => {
+    if (!params.id) return;
+    getDialogInfoByParams();
+  }, [getDialogInfoByParams, params.id]);
+
   return (
     <DialogsContainerWrapper>
       <ListsDialogsAndContactContainer />
-
-      {changeModeService.isSearchDialogsMode ? (
+      {changeModeService.selectedDialogMode ===
+      SearchDialogsModeEnum.SEARCH_DIALOGS ? (
         <DialogsSearchContainer />
       ) : (
         <DialogsAddedContainer />

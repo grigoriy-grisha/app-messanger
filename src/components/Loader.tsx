@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { keyframes } from "styled-components";
 
@@ -26,6 +25,6 @@ const Loader = styled.div`
       border-color: #7094CF transparent #7094CF transparent;
       animation: ${rotate} 1.2s linear infinite;
   }
-  
 }`;
+
 export default Loader;

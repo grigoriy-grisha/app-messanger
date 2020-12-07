@@ -1,3 +1,5 @@
+import { TypeMessageEnum } from "./types/typeMessage";
+
 export interface DialogInterface {
   _id: string;
   name: string;
@@ -16,7 +18,7 @@ export interface UserInterface {
 }
 
 export interface MessageInterface {
-  typeMessage: 1 | 2;
+  typeMessage: TypeMessageEnum;
   _id: string;
   author: UserInterface;
   text: string;

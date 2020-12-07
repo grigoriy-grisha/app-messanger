@@ -1,26 +1,36 @@
 import { makeAutoObservable } from "mobx";
+import { catchAlertsDecorator } from "utils/decorators/catchAlertsDecorator";
+import { getAction, postAction } from "utils/fetchActions";
+import { MessageInterface } from "types";
+
 import { dialogsService } from "./DialogsService/DialogsService";
-import { catchAlerts } from "../utils/catchAlerts";
-import { getAction, postAction } from "../utils/fetchActions";
-import { MessageInterface } from "../types";
+
+interface ResultMessageInterface {
+  messages: MessageInterface[];
+  message: string;
+}
 
 class MessagesService {
   messages: MessageInterface[] = [];
   isLoading = false;
+
   constructor() {
     makeAutoObservable(this);
   }
 
-  @catchAlerts
-  async getMessagesById(id: string) {
-    const result = await getAction(`/message/get/${id}`);
+  @catchAlertsDecorator
+  async getMessagesByDialogId(dialogId: string) {
+    this.isLoading = true;
+    const result: ResultMessageInterface = await getAction(
+      `/message/get/${dialogId}`
+    );
+    this.isLoading = false;
     this.messages = result.messages;
-    return result;
   }
 
-  @catchAlerts
+  @catchAlertsDecorator
   async sendMessage(message: string) {
-    return await postAction(`/message/${dialogsService.currentDialogId}/add`, {
+    await postAction(`/message/${dialogsService.currentDialogId}/add`, {
       text: message,
     });
   }

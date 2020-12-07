@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
 import { storageService } from "./StorageService";
-import { catchAlerts } from "utils/catchAlerts";
+import { catchAlertsDecorator } from "utils/decorators/catchAlertsDecorator";
 import { postAction } from "utils/fetchActions";
+import { RequestMessageInterface } from "types/RequestMessageInterface";
 
 class AuthService {
   token: string | null = null;
@@ -13,7 +14,7 @@ class AuthService {
     this.init();
   }
 
-  async init() {
+  private async init() {
     this.loading = true;
     this.token = await storageService.get("token");
     this.id = await storageService.get("id");
@@ -24,36 +25,30 @@ class AuthService {
     return !!this.token;
   }
 
-  @catchAlerts
-  async registerAction(body: object) {
+  @catchAlertsDecorator
+  async register(body: object) {
     return await postAction("/user/signup", body);
   }
 
-  @catchAlerts
-  async loginAction(body: object) {
+  @catchAlertsDecorator
+  async login(body: object) {
     const result = await postAction("/user/signin", body);
-    await this.setAuthDataAction(result.token, result._id);
-    return result;
+    await storageService.set("token", result.token);
+    await storageService.set("id", result._id);
+    this.token = result.token;
+    this.id = result._id;
   }
 
-  @catchAlerts
+  @catchAlertsDecorator
   async changePassword(password: string) {
-    const result = await postAction("/user/ChangePassword", { password });
+    const result: RequestMessageInterface = await postAction(
+      "/user/changePassword",
+      { password }
+    );
     return result.message;
   }
 
-  async setAuthDataAction(token: string, id: string) {
-    await storageService.set("token", token);
-    await storageService.set("id", id);
-    this.token = token;
-    this.id = id;
-  }
-
   logoutAction = async () => {
-    await this.removeAuthDataAction();
-  };
-
-  removeAuthDataAction = async () => {
     await storageService.delete("token");
     await storageService.delete("id");
     this.token = null;

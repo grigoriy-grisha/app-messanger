@@ -1,13 +1,15 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import React from "react";
 import { observer } from "mobx-react-lite";
-import Auth from "modules/auth";
-import Main from "modules/main/Main";
-import ChangePassword from "modules/auth/ChangePassword/ChangePassword";
-import { CenterElement } from "App";
+import Auth from "modules/Auth";
+
+import ChangePassword from "modules/Auth/ChangePassword/ChangePassword";
+
 import { authService } from "store/AuthService";
 
-import Loader from "../components/Loader";
+import Loader from "components/Loader";
+import Main from "modules/Main/Main";
+import { CenterElement } from "components/StyleComponents/GlobalStyleComponents";
 
 const Routes = () => {
   if (authService.loading) {

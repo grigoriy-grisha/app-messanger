@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-import { alertService } from "store/AlertService";
 
 const AlertContainer = styled.div`
   position: absolute;
@@ -15,9 +14,11 @@ const AlertContainer = styled.div`
   border-radius: 5px 5px 5px 5px;
   z-index: 9999;
 `;
-
-export const Alert = () => {
-  return <AlertContainer>{alertService.message}</AlertContainer>;
+interface AlertInterface {
+  message: string;
+}
+export const Alert = ({ message }: AlertInterface) => {
+  return <AlertContainer>{message}</AlertContainer>;
 };
 
 export default observer(Alert);

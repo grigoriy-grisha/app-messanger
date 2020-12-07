@@ -2,31 +2,33 @@ import React, { useCallback, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useHistory } from "react-router-dom";
 
-import { CenterElement, PreventiveMessage } from "App";
-
 import { dialogsService } from "store/DialogsService/DialogsService";
 import Loader from "components/Loader";
-import socket from "utils/socket";
+import { socketIoService } from "store/SocketService";
 import arrow from "static/img/arrow.svg";
-
-import { DialogInterface } from "types";
 
 import DialogItem from "./Item";
 import { DialogsWrapper } from "./index";
+import {
+  CenterElement,
+  PreventiveMessage,
+} from "../../components/StyleComponents/GlobalStyleComponents";
 
 export const AddedContainer = () => {
   const history = useHistory();
 
   useEffect(() => {
-    dialogsService.getDialogs();
+    dialogsService.getMyDialogs();
   }, []);
 
-  const onDialogItemClick = useCallback((id: string) => {
-    socket.emit("DIALOGS:JOIN", id);
-
-    history.push(`/dialogs/${id}`);
-    dialogsService.setCurrentDialog(id);
-  }, []);
+  const onDialogItemClick = useCallback(
+    (dialogId: string) => {
+      socketIoService.joinToDialog(dialogId);
+      dialogsService.setSelectedDialogId(dialogId);
+      history.push(`/dialogs/${dialogId}`);
+    },
+    [history]
+  );
 
   if (dialogsService.isLoading)
     return (
@@ -37,7 +39,7 @@ export const AddedContainer = () => {
       </DialogsWrapper>
     );
 
-  if (!dialogsService.dialogs.length) {
+  if (!dialogsService.currentDialogs.length) {
     return (
       <DialogsWrapper>
         <CenterElement>
@@ -49,19 +51,17 @@ export const AddedContainer = () => {
 
   return (
     <DialogsWrapper>
-      {dialogsService.dialogs.map((dialog) => {
-        return (
-          <DialogItem
-            key={dialog._id}
-            selected={dialogsService.currentDialogId == dialog._id}
-            id={dialog._id}
-            name={dialog.name}
-            users={dialog.users}
-            img={arrow}
-            onDialogItemClick={onDialogItemClick}
-          />
-        );
-      })}
+      {dialogsService.currentDialogs.map((dialog) => (
+        <DialogItem
+          key={dialog._id}
+          selected={dialogsService.currentDialogId === dialog._id}
+          id={dialog._id}
+          name={dialog.name}
+          users={dialog.users}
+          img={arrow}
+          onDialogItemClick={onDialogItemClick}
+        />
+      ))}
     </DialogsWrapper>
   );
 };

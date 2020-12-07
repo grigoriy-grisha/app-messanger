@@ -1,6 +1,6 @@
 import { DialogInterface } from "../types";
 
 export interface DialogInfoInterface {
-  dialogWasCreated: boolean;
+  dialogWasCreated: "DIALOG_WAS_CREATE";
   dialog: DialogInterface;
 }

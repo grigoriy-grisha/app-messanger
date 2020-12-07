@@ -1,12 +1,16 @@
 import { makeAutoObservable } from "mobx";
+import { SearchDialogsModeEnum } from "types/SearchDialogsModeType";
 
 class ChangeModeService {
-  isSearchDialogsMode: boolean = false;
+  selectedDialogMode: SearchDialogsModeEnum = SearchDialogsModeEnum.MY_DIALOGS;
+
   constructor() {
     makeAutoObservable(this);
   }
-  toggleSearchDialogsMode = (state: boolean) =>
-    (this.isSearchDialogsMode = state);
+
+  toggleSearchDialogsMode = (mode: SearchDialogsModeEnum) => {
+    this.selectedDialogMode = mode;
+  };
 }
 
 export const changeModeService = new ChangeModeService();
